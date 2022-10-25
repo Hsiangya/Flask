@@ -8,3 +8,4 @@ migrations/
 *.log
 logs/log*
 .env
+secret_data.py

@@ -1,21 +1,23 @@
 import os
 
+from secret_data import REDIS_HOST, REDIS_PORT, SQLALCHEMY_DATABASE_URI
+
 
 class BaseConfig:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev key")
 
     # mysql 数据库的配置信息
-    SQLALCHEMY_DATABASE_URI = ""
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["development"]
 
     # redis配置
-    REDIS_HOST = "127.0.0.1"
-    REDIS_PORT = 6379
+    REDIS_HOST = REDIS_HOST
+    REDIS_PORT = REDIS_PORT
 
 
 class DevelopmentConfig(BaseConfig):
     """开发配置"""
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["testing"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -28,7 +30,7 @@ class TestingConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     """生成环境配置"""
 
-    SQLALCHEMY_DATABASE_URI = ""
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["production"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
