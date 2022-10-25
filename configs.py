@@ -1,3 +1,4 @@
+import logging
 import os
 
 from secret_data import REDIS_HOST, REDIS_PORT, SQLALCHEMY_DATABASE_URI
@@ -19,6 +20,7 @@ class DevelopmentConfig(BaseConfig):
 
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["testing"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    LOG_LEVEL = logging.DEBUG
 
 
 class TestingConfig(BaseConfig):
@@ -32,6 +34,7 @@ class ProductionConfig(BaseConfig):
 
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["production"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    LOG_LEVEL = logging.ERROR
 
 
 config = {
