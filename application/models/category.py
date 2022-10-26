@@ -8,3 +8,4 @@ class CategoryORM(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # 分类编号
     name = db.Column(db.String(64), nullable=False)  # 分类名
+    articles = db.relationship("ArticleORM", backref="category", lazy="dynamic")

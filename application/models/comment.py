@@ -23,7 +23,8 @@ class CommentORM(db.Model):
         db.DateTime, default=datetime.now, onupdate=datetime.now
     )  # 记录的更新时间
 
-    parent_id = db.Column(db.Integer, db.ForeignKey("info_comment.id"))  # 父评论 id
+    parent_id = db.Column(db.Integer, db.ForeignKey("bbs_comment.id"))  # 父评论 id
+    parent = db.relationship("CommentORM", remote_side=[id])  # 自关联
 
 
 class CommentLikeORM(db.Model):

@@ -5,7 +5,6 @@ from application.extensions import db
 
 class ArticleORM(db.Model):
     __tablename__ = "info_article"
-
     id = db.Column(db.Integer, primary_key=True)  # 文章编号
     title = db.Column(db.String(256), nullable=False)  # 文章标题
     source = db.Column(db.String(64), nullable=False)  # 文章来源
@@ -23,3 +22,6 @@ class ArticleORM(db.Model):
     update_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now
     )  # 记录的更新时间
+
+    # 当前新闻的所有评论
+    comments = db.relationship("CommentORM", lazy="dynamic")
