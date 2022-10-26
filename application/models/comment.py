@@ -24,3 +24,21 @@ class CommentORM(db.Model):
     )  # 记录的更新时间
 
     parent_id = db.Column(db.Integer, db.ForeignKey("info_comment.id"))  # 父评论 id
+
+
+class CommentLikeORM(db.Model):
+    """评论点赞"""
+
+    __tablename__ = "info_comment_like"
+
+    comment_id = db.Column(
+        "comment_id", db.Integer, db.ForeignKey("info_comment.id"), primary_key=True
+    )  # 评论编号
+    user_id = db.Column(
+        "user_id", db.Integer, db.ForeignKey("info_user.id"), primary_key=True
+    )  # 用户编号
+
+    create_at = db.Column(db.DateTime, default=datetime.now)  # 记录的创建时间
+    update_at = db.Column(
+        db.DateTime, default=datetime.now, onupdate=datetime.now
+    )  # 记录的更新时间
