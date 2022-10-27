@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from application.extensions import db
 
@@ -52,3 +53,47 @@ class UserORM(db.Model, UserMixin):
         backref=db.backref("followed", lazy="dynamic"),
         lazy="dynamic",
     )  # 关注的用户/粉丝   自我关联
+
+    def json(self):
+        """ "获取用户数据"""
+        return {
+            "id": self.id,
+            "username": self.username,
+            "mobile": self.mobile,
+            "email": self.email,
+            "avatar_url": self.avatar_url,
+            "birthday": self.birthday,
+            "is_admin": self.is_admin,
+            "signature": self.signature,
+            "gender": self.gender,
+            "create_at": self.create_at.strftime("%Y-%M-%d"),
+            "update_at": self.update_at,
+            "is_delete": self.is_delete,
+        }
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password=password)
+
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
+
+    @classmethod
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
