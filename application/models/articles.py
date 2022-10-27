@@ -25,3 +25,24 @@ class ArticleORM(db.Model):
 
     # 当前新闻的所有评论
     comments = db.relationship("CommentORM", lazy="dynamic")
+
+    def json(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "source": self.source,
+            "digest": self.digest,
+            "content": self.content,
+            "clicks": self.clicks,
+            "index_image_url": self.index_image_url,
+            "status": self.status,
+            "reason": self.reason,
+            "category_id": self.category_id,
+            "user_id": self.user_id,
+            "create_at": str(self.create_at),
+            "update_at": str(self.update_at),
+        }
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
