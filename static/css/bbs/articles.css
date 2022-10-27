@@ -1,0 +1,379 @@
+a {
+    text-decoration: none !important;
+}
+
+/***************文章页展示******************/
+.article-body {
+    background: #fff;
+    border: 1px solid #ececee;
+    border-radius: 0;
+    overflow: hidden;
+    padding: 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.article-body img {
+    margin: 10px;
+    width: 95%;
+}
+
+.detail_about {
+    border-bottom: 1px solid #ebebeb;
+    padding: 10px 10px 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.time_source {
+    display: inline-block;
+    color: #999;
+    font-size: 12px;
+    text-indent: 20px;
+    background: url(/static/images/clock.png) left center no-repeat;
+}
+
+.comment_liens {
+    /*评论数量*/
+    display: inline-block;
+    color: #999;
+    font-size: 12px;
+    text-indent: 20px;
+    background: url(/static/images/comment_icon.png) left center no-repeat;
+}
+
+.article-body h4 {
+    /*文章内容*/
+    font-size: 18px;
+    font-weight: 700;
+    color: #59b7a7;
+    border-left: 5px solid #59b7a7;
+    padding-left: 10px;
+}
+
+.article-body p {
+    font-size: 16px;
+    line-height: 28px;
+    margin-bottom: 30px;
+}
+
+/****************收藏****************/
+
+
+.collection {
+    /*收藏*/
+    display: block;
+    margin: 0 auto;
+    width: 98px;
+    line-height: 34px;
+    text-indent: 45px;
+    border: 1px solid #59b7a7;
+    color: #59b7a7;
+    border-radius: 4px;
+    font-size: 14px;
+    background: url(/static/images/collect_icons.png) 21px 7px no-repeat;
+    overflow: hidden;
+}
+
+.collection:hover {
+    background: url(/static/images/collect_icons.png) 21px -33px no-repeat;
+    color: #59b7a7;
+}
+
+.collected {
+    /*取消收藏*/
+    width: 120px;
+    height: 36px;
+    margin: 0 auto;
+    line-height: 34px;
+    text-indent: 45px;
+    color: #666;
+    border-radius: 4px;
+    font-size: 14px;
+    background: url(/static/images/collect_icons.png) 15px -73px no-repeat #e6e6e6;
+    position: relative;
+    overflow: hidden;
+}
+
+.collected:hover {
+    color: #59b7a7;
+}
+
+/****************评论*****************/
+/*登录之后进行评论*/
+.comment_form_logout {
+    border: 1px solid #e3e8ee;
+    width: 95%;
+    border-radius: 4px;
+    padding: 15px 10px;
+    outline: none;
+    font-size: 16px;
+    color: #e3e8ee;
+    margin: 50px 0 0 0;
+}
+
+/*登录之后评论表单数据渲染*/
+.comment_form {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment_form .person_pic {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.comment_form img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.comment_form textarea {
+    height: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 4px;
+    padding: 10px;
+    outline: none;
+    border: 1px solid #2185ed;
+}
+
+.comment_form input {
+    align-self: flex-end;
+    width: 58px;
+    height: 28px;
+    border: 1px solid #2185ed;
+    background: #fff;
+    border-radius: 4px;
+    margin: 10px 20px 0 0;
+    cursor: pointer;
+}
+
+.comment_form input:hover {
+    background: #2185ed;
+    color: #fff;
+}
+
+/*评论数据*/
+.comment_count {
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #ebebeb;
+}
+
+/*评论列表*/
+.comment {
+    display: flex;
+    border-bottom: 1px solid #ebebeb;
+    margin-top: 15px;
+    padding-bottom: 15px;
+}
+
+.comment .person_pic {
+    display: flex;
+    width: 40px;
+    height: 40px;
+}
+
+.comment .person_pic img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-left: 20px;
+}
+
+.comment-content .comment-details {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+
+.comment .user_name {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #333;
+}
+
+.comment .comment_text {
+    font-size: 14px;
+    line-height: 20px;
+    color: #333;
+    margin: 5px 0 0 0;
+}
+
+.comment .comment_time {
+    font-size: 12px;
+    color: #999;
+    margin: 10px 0 0 0;
+}
+
+
+.comment .comment_up {
+    /*评论点赞*/
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+    text-indent: 20px;
+    margin: 10px 0 0 20px;
+    background: url(/static/images/zan_icon.png) left top no-repeat;
+}
+
+.comment .has_comment_up {
+    /*如果已经被点赞了就高亮图标*/
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+    text-indent: 20px;
+    margin: 10px 0 0 20px;
+    background: url(/static/images/zan_icon.png) left bottom no-repeat;
+}
+
+.comment .comment_reply {
+    /*回复评论*/
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+    text-indent: 20px;
+    margin: 10px 0 0 20px;
+    background: url(/static/images/reply_icon.png) left center no-repeat;
+}
+
+/*二级回复显示*/
+.comment .reply_text_con {
+    padding: 10px;
+    background: #fafafa;
+    margin: 10px 10px 0 0;
+}
+
+.reply_text_con .user_name2 {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 5px;
+}
+
+.reply_text_con .reply_text {
+    color: #666;
+    font-size: 12px;
+}
+
+.reply_form {
+    /*margin: 10px 0 0 0;*/
+    /*padding-right: 80px;*/
+    margin-top: 5px;
+    width: 95%;
+    display: none;
+}
+
+.reply_form > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.reply_form textarea {
+    width: 100%;
+    height: 30px;
+    border-radius: 4px;
+    padding: 10px;
+    outline: none;
+    border: 1px solid #2185ed;
+}
+
+.reply_form .sub_submit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reply_form .reply_sub,
+.reply_form .reply_cancel {
+    width: 40px;
+    height: 23px;
+    background: #76b6f4;
+    border: 0;
+    border-radius: 2px;
+    color: #fff;
+    margin: 10px 0 0 10px;
+    cursor: pointer;
+}
+
+.reply_form .reply_cancel {
+    background: #fff;
+    color: #909090;
+}
+
+/***************关注信息************************/
+
+.author_card {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+.author_card .card-header{
+    background-color: #fff;
+}
+.author_card .author_pic img {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+}
+
+.author_card .author_name {
+    color: #333;
+    font-size: 22px;
+    line-height: 60px;
+    margin-left: 16px;
+}
+
+.author_name:hover {
+    color: #59b7a7;
+}
+
+/***********关注与取消关注***************/
+.focus {
+    /*个人信息 关注*/
+    display: inline-block;
+    width: 98px;
+    line-height: 34px;
+    text-indent: 45px;
+    border: 1px solid #f80;
+    color: #f80;
+    border-radius: 4px;
+    font-size: 14px;
+    background: url(/static/images/focus_icons.png) 21px 7px no-repeat;
+}
+
+.focus:hover {
+    background: url(/static/images/focus_icons.png) 21px -33px no-repeat;
+}
+
+.focused {
+    /*个人信息 取消关注*/
+    display: inline-block;
+    width: 98px;
+    height: 36px;
+    line-height: 34px;
+    text-indent: 45px;
+    color: #666;
+    border-radius: 4px;
+    font-size: 14px;
+    background: url(/static/images/focus_icons.png) 15px -73px no-repeat #e6e6e6;
+}
+
+.focused:hover .out, .focused:hover .over {
+    color: #59b7a7;
+}

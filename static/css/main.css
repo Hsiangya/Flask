@@ -1,0 +1,85 @@
+@import url("bbs/articles.css");
+@import url("bbs/rank.css");
+
+body {
+    background: #f9f9f9;
+    font-family: 'Microsoft YaHei', serif;
+}
+
+/*头部导航栏*/
+header {
+    height: 59px;
+    border-bottom: 1px solid #d2d2d2;
+    background-color: #fafafa;
+}
+
+.logo {
+    height: 59px;
+    line-height: 59px;
+}
+
+.menu {
+    /*菜单栏*/
+    width: 600px;
+    height: 59px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.menu li {
+    list-style: none;
+    height: 59px;
+    padding: 0 20px;
+}
+
+.menu li.active {
+    border-bottom: 2px solid #59b7a7;
+    color: #59b7a7;
+}
+
+.menu li a {
+    text-decoration: none;
+    display: block;
+    line-height: 59px;
+    font-size: 16px;
+    color: #666;
+}
+
+.menu li a:hover {
+    color: #59b7a7;
+}
+
+.menu .active a {
+    color: #59b7a7;
+}
+
+.login-btn {
+    line-height: 59px;
+    height: 59px;
+    color: #666;
+}
+.login-btn a {
+    text-decoration: none;
+    color: #666;
+}
+.login-btn a:hover {
+    color: #59b7a7;
+}
+
+/*************************首页文章展示**********************/
+.article a {
+    text-decoration: none;
+    color: #000;
+}
+
+.article a:hover {
+    color: #59b7a7 !important;
+}
+
+.article .card-title {
+    font-size: 18px
+}
+
+.article .card-text {
+    font-size: 14px
+}

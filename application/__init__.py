@@ -2,9 +2,8 @@ import os
 
 from flask import Flask
 
-from application import models
 from application.common.utils import setup_log
-from application.extensions import db, migrate
+from application.extensions import db, migrate, redis
 from application.views import auth_bp, index_bp
 from configs import config
 
@@ -24,6 +23,7 @@ def register_extensions(app: Flask):
     """绑定插件"""
     db.init_app(app)
     migrate.init_app(app, db)
+    redis.init_app(app)
 
 
 def register_blueprint(app: Flask):

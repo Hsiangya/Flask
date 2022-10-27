@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+</head>
+<body>
+<form class="layui-form" action="javascript:void(0);">
+    <div class="layui-form-item">
+        <img class="logo" src="/static/images/logo2.png"/>
+        <div class="title">D O R E</div>
+        <div class="desc">
+            D o r e 登 录 页 面
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <input name="username" type="text" placeholder="账 户 : admin " value="admin" hover class="layui-input"/>
+    </div>
+    <div class="layui-form-item">
+        <input name="password" type="password" placeholder="密 码 : 123456 " value="123456" hover class="layui-input"/>
+    </div>
+    <div class="layui-form-item">
+        <input placeholder="验证码 : " name="captcha_code" hover class="code layui-input layui-input-inline"/>
+        <img src="/static/images/getCaptcha.png" class="codeImage" id="captchaImage" style="height: 36px"/>
+    </div>
+    <div class="layui-form-item">
+        <input type="checkbox" name="remember-me" title="记住密码" lay-skin="primary">
+    </div>
+
+    <div class="layui-form-item">
+        <button class="layui-btn" lay-submit lay-filter="login">
+            登 入
+        </button>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-mid layui-word-aux">
+            没有账号？ <a href="/register" style="color: #59b7a7;">注册</a>
+        </div>
+    </div>
+</form>
+<script src="/static/layui/layui.js"></script>
+<script>
+
+</script>
+</body>
+</html>

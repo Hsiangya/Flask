@@ -1,0 +1,31 @@
+/**************侧边栏**************/
+.rank_title {
+    height: 53px;
+    background: #fff;
+    border-bottom: 1px solid #ececee;
+}
+
+.rank_title h3 {
+    line-height: 53px;
+    font-size: 14px;
+    color: #000;
+    text-indent: 42px;
+    background: url(/static/images/hit_icon.png) 10px center no-repeat;
+}
+
+.rank .list-group-item {
+    background: #fff;
+    padding-left: 10px;
+}
+
+.rank a {
+    text-decoration: none;
+    overflow: hidden;
+    font-size: 14px;
+    color: #333;
+}
+
+.rank a:hover {
+    color: #59b7a7;
+}
+

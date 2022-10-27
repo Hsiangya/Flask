@@ -1,0 +1,174 @@
+/*********用户信息详情页*********/
+.profile-menu {
+    min-height: 800px;
+    background: #fff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-picture {
+    width: 198px;
+    height: 198px;
+    margin: 0 auto;
+}
+
+.profile-picture img {
+    width: 198px;
+    height: 198px;
+    border-radius: 99px;
+}
+
+.profile-name {
+    margin: 10px auto;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.profile-option-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px 0;
+}
+
+.profile-option-list li {
+
+    list-style: none;
+    font-size: 14px;
+    line-height: 40px;
+    text-indent: 10px;
+}
+
+.profile-option-list li a {
+    border-radius: 10px;
+    display: block;
+}
+
+.profile-option-list li a:hover {
+    background-color: #f5f5f5;
+}
+
+.profile-option-list li a.active {
+    background-color: #f5f5f5;
+}
+
+.profile-option-list li a i {
+    color: #333333;
+    font-size: 12px;
+    float: right;
+    margin-right: 10px;
+}
+
+
+/***********用户文章列表***************/
+.profile-card {
+    background-color: #fff;
+    min-height: 800px;
+}
+
+.table a {
+    position: relative;
+    color: #666;
+    font-size: 14px;
+    margin-left: 20px;
+}
+
+.table a:before {
+    content: "· ";
+    color: #59b7a7;
+    font-size: 40px;
+    position: absolute;
+    left: -17px;
+    top: -20px;
+}
+
+.table a:hover {
+    color: #59b7a7;
+}
+
+.table span {
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: url(/static/images/clock.png) left center no-repeat;
+}
+
+
+.page-link {
+    color: #59b7a7;
+    font-weight: bold;
+}
+
+/***************关注信息************************/
+.author-cards {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    column-gap: 20px;
+}
+
+.author_card {
+    background: #fff;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+}
+
+/***********用户文章列表***************/
+
+.profile-articles {
+    margin: 30px;
+}
+
+.profile-articles li {
+    height: 50px;
+    border-bottom: 1px solid #ededed;
+    position: relative;
+}
+
+.profile-articles li a {
+    display: inline-block;
+    line-height: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    color: #666;
+    text-indent: 20px;
+}
+
+.profile-articles li a:before {
+    content: "· ";
+    color: #59b7a7;
+    font-size: 40px;
+    position: absolute;
+    left: -17px;
+    top: -2px;
+}
+
+.profile-articles li a:hover {
+    color: #59b7a7;
+}
+
+.profile-articles li span {
+    line-height: 50px;
+    font-size: 14px;
+    color: #999;
+    text-indent: 20px;
+    float: right;
+    background: url(/static/images/clock.png) left center no-repeat;
+}
+
+.review {
+    color: #dca80a;
+}
+
+.nopass {
+    color: #f00;
+}
+
+.pass {
+    color: #59b7a7;
+}
+
