@@ -88,7 +88,6 @@
     $('.send_sms').click(function() {
       let captcha_code = $('[name="captcha_code"]').val();
       let mobile = $('[name="mobile"]').val();
-      console.log(captcha_code, mobile);
       if (captcha_code === '' || mobile === '') {
         layer.msg('验证码与手机号不能为空');
         return false;
@@ -133,8 +132,8 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(data),
       };
-      const response=await fetch('/register',options);
-      return await response.json()
+      const response = await fetch('/register', options);
+      return await response.json();
 
     }
 
@@ -142,11 +141,10 @@
     form.on('submit(register)', async function(data) {
       const result = await register(data.field);
       if (result.status === 'success') {
-
         layer.msg('注册成功 2s 之后跳转到登录页面');
-       // setTimeout(function() {
-        //  window.location.href = '/login';
-       // }, 2000);
+        setTimeout(function() {
+          window.location.href = '/login';
+        }, 2000);
 
       } else {
         layui.layer.msg(result.message);

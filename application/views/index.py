@@ -1,8 +1,12 @@
+import random
+
 from flask import Blueprint, current_app, make_response, render_template, request
 
 from application.common import constants
 from application.common.get_captcha import get_captcha_image
-from application.extensions import redis
+from application.common.sms import send_sms
+from application.extensions import db, redis
+from application.models import UserORM
 
 index_bp = Blueprint("index", __name__)
 
@@ -37,15 +41,43 @@ def register_view2():
     # 如果没有验证码或验证码不正确
     if not (real_captcha_code and real_captcha_code == captcha_code):
         return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
-
+    user = UserORM()
+    user.username = username
+    user.password = password
+    user.mobile = mobile
+    db.session.add(user)
+    db.session.commit()
     return {"status": "success", "message": "注册成功，现在可以去登录了"}
 
 
 @index_bp.route("/sms_code", methods=["POST"])
 def sms_code():
+    """获取数据"""
     captcha_code = request.json.get("captcha_code")
-    print(captcha_code)
-    return "123"
+    captcha_code_uuid = request.json.get("captcha_code_uuid")
+    mobile = request.json.get("mobile")
+    """ 校验验证码"""
+    real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
+    # 如果没有验证码或验证码不正确
+    if not real_captcha_code:
+        return {"status": "fail", "message": "验证码已过期"}
+    if real_captcha_code != captcha_code:
+        return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
+
+    """发送短信验证码"""
+    sms_code_data = random.randint(0, 999999)
+    sms_code_data = "%06d" % sms_code_data
+    """redis 记录手机验证码"""
+    ret = send_sms([mobile], sms_code_data, "5")
+    if not ret:
+        current_app.logger.debug(f"短信发送失败:{mobile} {sms_code_data}")
+        return {"status": "success", "message": "短信验证码发送失败"}
+    else:
+        current_app.logger.debug(f"短信发送成功:{mobile} {sms_code_data}")
+    redis.strict_redis.setex(
+        "sms_code_data" + mobile, constants.SMS_CODE_REDIS_EXPIRES, sms_code_data
+    )
+    return {"status": "success", "message": "短信验证码已发送，请在5分钟内完成注册"}
 
 
 @index_bp.route("/get_captcha")
