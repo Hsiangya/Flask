@@ -1,6 +1,7 @@
 import random
 
 from flask import Blueprint, current_app, make_response, render_template, request
+from flask_login import login_user
 
 from application.common import constants
 from application.common.get_captcha import get_captcha_image
@@ -35,21 +36,21 @@ def register_view2():
     username = request.json.get("username")
     password = request.json.get("password")
     phone = request.json.get("phone")
-    print(type(phone))
+    # print(type(phone))
     sms_captcha = request.json.get("sms_captcha")
 
     """校验图片验证码"""
     real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
-    print("real_captcha_code" + real_captcha_code)
-    if not real_captcha_code:
-        return {"status": "fail", "message": "图片验证码已过期，请重新获"}
+    # print("real_captcha_code" + real_captcha_code)
+    # if not real_captcha_code:
+    #     return {"status": "fail", "message": "图片验证码已过期，请重新获"}
     if real_captcha_code != captcha_code:
         return {"status": "fail", "message": "图片验证码错误，请输入正确的验证码"}
 
     """校验短信验证码"""
     real_sms_code = redis.strict_redis.get("sms_code" + phone)
-    if not real_sms_code:
-        return {"status": "fail", "message": "短信验证码已过期，请重新获"}
+    # if not real_sms_code:
+    #     return {"status": "fail", "message": "短信验证码已过期，请重新获"}
     if real_sms_code != sms_captcha:
         return {"status": "fail", "message": "短信验证码错误，请输入正确的验证码"}
     user = UserORM()
@@ -122,6 +123,36 @@ def login_view2():
     password = request.json.get("password")
     captcha_code_uuid = request.json.get("captcha_code_uuid")
     captcha_code = request.json.get("captcha_code")
+
     """校验参数"""
+    """1. 校验数据是否完整"""
+    if not all(
+        [
+            username,
+            password,
+        ]
+    ):
+        return {"status": "fail", "message": "用户名与密码不能为空"}
+    """2. 校验图片验证码"""
     real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
-    return {"status": "fail", "message": "登陆失败"}
+    # if not real_captcha_code:
+    #     return {"status": "fail", "message": "验证码已过期，请刷新验证码"}
+    if captcha_code != real_captcha_code:
+        return {"status": "fail", "message": "验证码错误，请重新输入"}
+
+    """查询该用户是否注册"""
+    # 确保查询没有出错
+    try:
+        user: UserORM = UserORM.query().filter(UserORM.username == username).first()
+    except Exception as e:
+        current_app.logger.error(e)
+        return {"status": "error", "message": "查询用户出错"}
+    if not user:
+        return {"status": "fail", "message": "该用户未注册，请先注册"}
+    """检查密码是否正确"""
+    if not user.check_password(password):
+        return {"status": "fail", "message": "密码错误，请输入正确的密码"}
+
+    """登录用户"""
+    login_user(user)
+    return {"status": "success", "message": "登录成功,将在两秒后跳转"}

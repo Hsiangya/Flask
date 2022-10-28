@@ -3,7 +3,8 @@ import os
 from flask import Flask
 
 from application.common.utils import setup_log
-from application.extensions import db, migrate, redis
+from application.extensions import db, login_manager, migrate, redis
+from application.models import UserORM
 from application.views import auth_bp, index_bp
 from configs import config
 
@@ -25,6 +26,14 @@ def register_extensions(app: Flask):
     db.init_app(app)
     migrate.init_app(app, db)
     redis.init_app(app)
+    login_manager.init_app()
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return UserORM.query.get(user_id)
+
+    # 注册未登录跳转的页面
+    login_manager.login_view = "index.login_view"
 
 
 def register_blueprint(app: Flask):
