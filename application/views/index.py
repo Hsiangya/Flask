@@ -19,8 +19,22 @@ def favicon():
 
 
 @index_bp.route("/register")
-def register():
+def register_view():
     return render_template("bbs/register.html")
+
+
+@index_bp.route("/register", methods=["POST"])
+def register_view2():
+    """获取参数"""
+    captcha_code_uuid = request.json.get("captcha_code_uuid")
+    captcha_code = request.json.get("captcha_code")
+    username = request.json.get("username")
+    password = request.json.get("password")
+    mobile = request.json.get("mobile")
+    sms_captcha = request.json.get("sms_captcha")
+    """校验参数"""
+
+    return {"status": "success", "message": "短信验证码发送成功,请在300秒之内容注册完"}
 
 
 @index_bp.route("/sms_code", methods=["POST"])
@@ -32,16 +46,18 @@ def sms_code():
 
 @index_bp.route("/get_captcha")
 def get_captcha():
-    """图片uuid 验证码"""
+    """获取前端生成的uuid"""
     captcha_code_uuid = request.args.get("captcha_code_uuid")
+    """后端生成验证码"""
     image, code = get_captcha_image()
-    # uuid 验证码保存到redis
+    """将uuid与验证码的值以键值对形式存储在redis中"""
     redis.strict_redis.setex(
         "captcha_code_uuid_" + captcha_code_uuid,
         constants.IMAGE_CODE_REDIS_EXPIRES,
         code,
     )
-    # 图片返回前端
-    response = make_response(image)  # 将图片验证码图片制作成响应体
+    """ 将图片制作成响应体返回前端"""
+    response = make_response(image)
+    """指定响应体格式"""
     response.content_type = "image/png"
     return response
