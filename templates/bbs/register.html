@@ -27,14 +27,14 @@
     <div class="layui-form-item">
         <input placeholder="验证码 : " name="captcha_code" lay-verify="required"
                hover class="code layui-input layui-input-inline"/>
-        <img src="/static/images/getCaptcha.png" class="codeImage" id="captchaImage"/>
+        <img src="" class="codeImage" id="captchaImage"/>
     </div>
     <div class="layui-form-item">
         <input name="mobile" type="text" lay-verify="required" placeholder="手机号:" value="" hover
                class="code layui-input layui-input-inline"
                autocomplete="off"/>
         <!--点击发送短信-->
-        <div class="layui-form-mid layui-word-aux"><a href="javascript:;" class="send_sms">点击获取验证码</a>
+        <div class="layui-form-mid layui-word-aux"><a href="javascript:;" class="send_sms">获取短信验证码</a>
         </div>
     </div>
     <div class="layui-form-item">
@@ -49,7 +49,7 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-form-mid layui-word-aux">
-            已有账号？ <a href="/login" style="color: #59b7a7;">登录</a>
+            已有账号？ <a href="./login" style="color: #59b7a7;">登录</a>
         </div>
     </div>
 </form>
@@ -88,8 +88,12 @@
     $('.send_sms').click(function() {
       let captcha_code = $('[name="captcha_code"]').val();
       let mobile = $('[name="mobile"]').val();
-      if (captcha_code === '' || mobile === '') {
-        layer.msg('验证码与手机号不能为空');
+      if (captcha_code === ''){
+        layer.msg('验证码不能为空');
+        return false;
+      }
+      if (mobile === '') {
+        layer.msg('手机号不能为空');
         return false;
       }
       // 向后端校验验证码 验证码uuid 以及手机号
@@ -152,21 +156,6 @@
       }
       return false;
     });
-
-    // 生成 uuid
-    function generateUUID() {
-      var d = new Date().getTime();
-      if (window.performance && typeof window.performance.now === 'function') {
-        d += performance.now(); //use high-precision timer if available
-      }
-      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
-          function(c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-          });
-      return uuid;
-    }
   });
 </script>
 </body>

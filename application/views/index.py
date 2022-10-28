@@ -97,3 +97,13 @@ def get_captcha():
     """指定响应体格式"""
     response.content_type = "image/png"
     return response
+
+
+@index_bp.route("/login")
+def login_view():
+    return render_template("bbs/login.html")
+
+
+@index_bp.route("/login", methods=["POST"])
+def login_view2():
+    return {"status": "success", "message": "登陆成功"}
