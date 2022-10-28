@@ -34,17 +34,28 @@ def register_view2():
     captcha_code = request.json.get("captcha_code")
     username = request.json.get("username")
     password = request.json.get("password")
-    mobile = request.json.get("mobile")
+    phone = request.json.get("phone")
+    print(type(phone))
     sms_captcha = request.json.get("sms_captcha")
-    """校验参数"""
+
+    """校验图片验证码"""
     real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
-    # 如果没有验证码或验证码不正确
-    if not (real_captcha_code and real_captcha_code == captcha_code):
-        return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
+    print("real_captcha_code" + real_captcha_code)
+    if not real_captcha_code:
+        return {"status": "fail", "message": "图片验证码已过期，请重新获"}
+    if real_captcha_code != captcha_code:
+        return {"status": "fail", "message": "图片验证码错误，请输入正确的验证码"}
+
+    """校验短信验证码"""
+    real_sms_code = redis.strict_redis.get("sms_code" + phone)
+    if not real_sms_code:
+        return {"status": "fail", "message": "短信验证码已过期，请重新获"}
+    if real_sms_code != sms_captcha:
+        return {"status": "fail", "message": "短信验证码错误，请输入正确的验证码"}
     user = UserORM()
     user.username = username
     user.password = password
-    user.mobile = mobile
+    user.mobile = phone
     db.session.add(user)
     db.session.commit()
     return {"status": "success", "message": "注册成功，现在可以去登录了"}
@@ -55,7 +66,7 @@ def sms_code():
     """获取数据"""
     captcha_code = request.json.get("captcha_code")
     captcha_code_uuid = request.json.get("captcha_code_uuid")
-    mobile = request.json.get("mobile")
+    phone = request.json.get("phone")
     """ 校验验证码"""
     real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
     # 如果没有验证码或验证码不正确
@@ -65,17 +76,17 @@ def sms_code():
         return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
 
     """发送短信验证码"""
-    sms_code_data = random.randint(0, 999999)
-    sms_code_data = "%06d" % sms_code_data
+    send_sms_code = random.randint(0, 999999)
+    send_sms_code = "%06d" % send_sms_code
     """redis 记录手机验证码"""
-    ret = send_sms([mobile], sms_code_data, "5")
+    ret = send_sms([phone], send_sms_code, "5")
     if not ret:
-        current_app.logger.debug(f"短信发送失败:{mobile} {sms_code_data}")
-        return {"status": "success", "message": "短信验证码发送失败"}
+        current_app.logger.debug(f"短信发送失败:{phone} {send_sms_code}")
+        return {"status": "fail", "message": "短信验证码发送失败"}
     else:
-        current_app.logger.debug(f"短信发送成功:{mobile} {sms_code_data}")
+        current_app.logger.debug(f"短信发送成功:{phone} {send_sms_code}")
     redis.strict_redis.setex(
-        "sms_code_data" + mobile, constants.SMS_CODE_REDIS_EXPIRES, sms_code_data
+        "sms_code" + phone, constants.SMS_CODE_REDIS_EXPIRES, send_sms_code
     )
     return {"status": "success", "message": "短信验证码已发送，请在5分钟内完成注册"}
 
@@ -106,4 +117,11 @@ def login_view():
 
 @index_bp.route("/login", methods=["POST"])
 def login_view2():
-    return {"status": "success", "message": "登陆成功"}
+    """获取参数"""
+    username = request.json.get("username")
+    password = request.json.get("password")
+    captcha_code_uuid = request.json.get("captcha_code_uuid")
+    captcha_code = request.json.get("captcha_code")
+    """校验参数"""
+    real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
+    return {"status": "fail", "message": "登陆失败"}

@@ -30,7 +30,7 @@
         <img src="" class="codeImage" id="captchaImage"/>
     </div>
     <div class="layui-form-item">
-        <input name="mobile" type="text" lay-verify="required" placeholder="手机号:" value="" hover
+        <input name="phone" type="text" lay-verify="required" placeholder="手机号:" value="" hover
                class="code layui-input layui-input-inline"
                autocomplete="off"/>
         <!--点击发送短信-->
@@ -79,7 +79,7 @@
     }
 
     // 定时器，定时更新验证码
-    setInterval(update_captcha_image, 50 * 1000);
+    setInterval(update_captcha_image, 300 * 1000);
 
     // 每次进入页面之后,自动刷新验证码
     update_captcha_image();
@@ -87,12 +87,12 @@
     // 发送手机验证码
     $('.send_sms').click(function() {
       let captcha_code = $('[name="captcha_code"]').val();
-      let mobile = $('[name="mobile"]').val();
-      if (captcha_code === ''){
+      let phone = $('[name="phone"]').val();
+      if (captcha_code === '') {
         layer.msg('验证码不能为空');
         return false;
       }
-      if (mobile === '') {
+      if (phone === '') {
         layer.msg('手机号不能为空');
         return false;
       }
@@ -100,7 +100,7 @@
       let data = {
         captcha_code: captcha_code,
         captcha_code_uuid: captcha_code_uuid,
-        mobile: mobile,
+        phone: phone,
       };
       const option = {
         method: 'POST',
@@ -127,36 +127,37 @@
       });
     });
 
-    // 获取数据并向后端动态加载数据进行校验
-    // 1. 获取图片验证码uuid
-    async function register(data) {
-      data['captcha_code_uuid'] = captcha_code_uuid;
-      const options = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data),
-      };
-      const response = await fetch('/register', options);
-      return await response.json();
+  // 获取数据并向后端动态加载数据进行校验
+  async function register(data) {
+    data['sms_captcha'] = $('[name="sms_captcha"]').val();
+    data['captcha_code_uuid'] = captcha_code_uuid;
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    };
+    const response = await fetch('/register', options);
+    return await response.json();
 
+  }
+
+  // 监听注册按钮事件
+  form.on('submit(register)', async function(data) {
+    const result = await register(data.field);
+    if (result.status === 'success') {
+      layer.msg('注册成功 2s 之后跳转到登录页面');
+      setTimeout(function() {
+        window.location.href = '/login';
+      }, 2000);
+
+    } else {
+      layui.layer.msg(result.message);
+      update_captcha_image();
     }
-
-    // 监听注册按钮事件
-    form.on('submit(register)', async function(data) {
-      const result = await register(data.field);
-      if (result.status === 'success') {
-        layer.msg('注册成功 2s 之后跳转到登录页面');
-        setTimeout(function() {
-          window.location.href = '/login';
-        }, 2000);
-
-      } else {
-        layui.layer.msg(result.message);
-        update_captcha_image();
-      }
-      return false;
-    });
+    return false;
   });
+  })
+  ;
 </script>
 </body>
 </html>
