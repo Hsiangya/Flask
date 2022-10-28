@@ -1,4 +1,3 @@
-# filename: qingdeng/com/get_captcha.py
 from io import BytesIO
 from random import choices
 

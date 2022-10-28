@@ -1,6 +1,8 @@
-from flask import Blueprint, current_app, render_template, request
+from flask import Blueprint, current_app, make_response, render_template, request
 
-from application.common.get_captcha import gen_captcha
+from application.common import constants
+from application.common.get_captcha import get_captcha_image
+from application.extensions import redis
 
 index_bp = Blueprint("index", __name__)
 
@@ -31,6 +33,15 @@ def sms_code():
 @index_bp.route("/get_captcha")
 def get_captcha():
     """图片uuid 验证码"""
-    captcha_code_uuid = request.json.get("captcha_code_uuid")
-    code, image = gen_captcha()
-    # 保存到redis
+    captcha_code_uuid = request.args.get("captcha_code_uuid")
+    image, code = get_captcha_image()
+    # uuid 验证码保存到redis
+    redis.strict_redis.setex(
+        "captcha_code_uuid_" + captcha_code_uuid,
+        constants.IMAGE_CODE_REDIS_EXPIRES,
+        code,
+    )
+    # 图片返回前端
+    response = make_response(image)  # 将图片验证码图片制作成响应体
+    response.content_type = "image/png"
+    return response
