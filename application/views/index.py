@@ -33,8 +33,12 @@ def register_view2():
     mobile = request.json.get("mobile")
     sms_captcha = request.json.get("sms_captcha")
     """校验参数"""
+    real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
+    # 如果没有验证码或验证码不正确
+    if not (real_captcha_code and real_captcha_code == captcha_code):
+        return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
 
-    return {"status": "success", "message": "短信验证码发送成功,请在300秒之内容注册完"}
+    return {"status": "success", "message": "注册成功，现在可以去登录了"}
 
 
 @index_bp.route("/sms_code", methods=["POST"])
