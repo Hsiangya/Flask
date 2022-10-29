@@ -6,11 +6,15 @@
         </a>
         <!-- 中间分类栏 -->
         <ul class="menu d-flex justify-content-between">
-            <li data-cid="1"><a href="/?cid=1">基础</a></li>
-            <li data-cid="2"><a href="/?cid=2">进阶</a></li>
-            <li data-cid="3"><a href="/?cid=3">爬虫</a></li>
-            <li data-cid="4"><a href="/?cid=4">数分</a></li>
-            <li data-cid="5"><a href="/?cid=5">全栈</a></li>
+            {% for category in category_list %}
+                <li data-cid="{{ category.id }}" class="{% if category.id == cid %}active{% endif %}">
+                    <a href="/?cid={{ category.id }}">{{ category.name }}</a></li>
+            {% endfor %}
+            {#<li data-cid="1"><a href="/?cid=1">基础</a></li>#}
+            {#<li data-cid="2"><a href="/?cid=2">进阶</a></li>#}
+            {#<li data-cid="3"><a href="/?cid=3">爬虫</a></li>#}
+            {#<li data-cid="4"><a href="/?cid=4">数分</a></li>#}
+            {#<li data-cid="5"><a href="/?cid=5">全栈</a></li>#}
         </ul>
         <!--登录注册栏-->
         <div class="login-btn">

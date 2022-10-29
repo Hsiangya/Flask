@@ -14,11 +14,10 @@ index_bp = Blueprint("index", __name__)
 
 @index_bp.route("/")
 def index():
-    """查询分类数据库"""
+    """查询分类数据"""
     category_list = CategoryORM.query.all()
 
-    """查询文章数据库"""
-    return render_template("bbs/index.html")
+    return render_template("bbs/index.html", category_list=category_list)
 
 
 @index_bp.route("/favicon.ico")
