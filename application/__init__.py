@@ -26,7 +26,7 @@ def register_extensions(app: Flask):
     db.init_app(app)
     migrate.init_app(app, db)
     redis.init_app(app)
-    login_manager.init_app()
+    login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):

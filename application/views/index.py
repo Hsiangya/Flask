@@ -143,7 +143,7 @@ def login_view2():
     """查询该用户是否注册"""
     # 确保查询没有出错
     try:
-        user: UserORM = UserORM.query().filter(UserORM.username == username).first()
+        user: UserORM = UserORM.query.filter(UserORM.username == username).first()
     except Exception as e:
         current_app.logger.error(e)
         return {"status": "error", "message": "查询用户出错"}

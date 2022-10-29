@@ -17,11 +17,11 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <input name="username" type="text" lay-verify="required" placeholder="账 户:" value="" hover class="layui-input"
+        <input name="username" type="text" lay-verify="required|username" placeholder="账 户:" value="" hover class="layui-input"
                autocomplete="off"/>
     </div>
     <div class="layui-form-item">
-        <input name="password" type="password" lay-verify="required" placeholder="密 码 :" value="" hover
+        <input name="password" type="password" lay-verify="required|pass" placeholder="密 码 :" value="" hover
                class="layui-input"/>
     </div>
     <div class="layui-form-item">
@@ -30,7 +30,7 @@
         <img src="" class="codeImage" id="captchaImage"/>
     </div>
     <div class="layui-form-item">
-        <input name="phone" type="text" lay-verify="required" placeholder="手机号:" value="" hover
+        <input name="phone" type="text" lay-verify="required|phone" placeholder="手机号:" value="" hover
                class="code layui-input layui-input-inline"
                autocomplete="off"/>
         <!--点击发送短信-->
@@ -127,37 +127,36 @@
       });
     });
 
-  // 获取数据并向后端动态加载数据进行校验
-  async function register(data) {
-    data['sms_captcha'] = $('[name="sms_captcha"]').val();
-    data['captcha_code_uuid'] = captcha_code_uuid;
-    const options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data),
-    };
-    const response = await fetch('/register', options);
-    return await response.json();
+    // 获取数据并向后端动态加载数据进行校验
+    async function register(data) {
+      data['sms_captcha'] = $('[name="sms_captcha"]').val();
+      data['captcha_code_uuid'] = captcha_code_uuid;
+      const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+      };
+      const response = await fetch('/register', options);
+      return await response.json();
 
-  }
-
-  // 监听注册按钮事件
-  form.on('submit(register)', async function(data) {
-    const result = await register(data.field);
-    if (result.status === 'success') {
-      layer.msg('注册成功 2s 之后跳转到登录页面');
-      setTimeout(function() {
-        window.location.href = '/login';
-      }, 2000);
-
-    } else {
-      layui.layer.msg(result.message);
-      update_captcha_image();
     }
-    return false;
+
+    // 监听注册按钮事件
+    form.on('submit(register)', async function(data) {
+      const result = await register(data.field);
+      if (result.status === 'success') {
+        layer.msg('注册成功 2s 之后跳转到登录页面');
+        setTimeout(function() {
+          window.location.href = '/login';
+        }, 2000);
+
+      } else {
+        layui.layer.msg(result.message);
+        update_captcha_image();
+      }
+      return false;
+    });
   });
-  })
-  ;
 </script>
 </body>
 </html>
