@@ -7,13 +7,17 @@ from application.common import constants
 from application.common.get_captcha import get_captcha_image
 from application.common.sms import send_sms
 from application.extensions import db, redis
-from application.models import UserORM
+from application.models import CategoryORM, UserORM
 
 index_bp = Blueprint("index", __name__)
 
 
 @index_bp.route("/")
 def index():
+    """查询分类数据库"""
+    category_list = CategoryORM.query.all()
+
+    """查询文章数据库"""
     return render_template("bbs/index.html")
 
 
