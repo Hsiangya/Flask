@@ -38,9 +38,24 @@ def index():
     else:
         filters.append(ArticleORM.category_id == cid)
 
-    paginate = ArticleORM.query.order_by(ArticleORM.create_at.desc())
+    paginate = (
+        (ArticleORM.query.order_by(ArticleORM.create_at.desc()))
+        .filter()
+        .paginate(page=page, per_page=per_page, error_out=False)
+    )
 
-    return render_template("bbs/index.html", category_list=category_list)
+    """热门文章数据"""
+    click_article_list = (
+        ArticleORM.query.order_by(ArticleORM.clicks.desc()).limit(10).all()
+    )
+
+    return render_template(
+        "bbs/index.html",
+        category_list=category_list,
+        paginate=paginate,
+        cid=cid,
+        click_article_list=click_article_list,
+    )
 
 
 @index_bp.route("/favicon.ico")
