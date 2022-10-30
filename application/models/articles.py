@@ -36,7 +36,7 @@ class ArticleORM(db.Model):
             "clicks": self.clicks,
             "index_image_url": self.index_image_url,
             "status": self.status,
-            "reason": self.reason,
+            "": self.reason,
             "category_id": self.category_id,
             "user_id": self.user_id,
             "create_at": str(self.create_at),

@@ -17,9 +17,24 @@
             {#<li data-cid="5"><a href="/?cid=5">全栈</a></li>#}
         </ul>
         <!--登录注册栏-->
-        <div class="login-btn">
-            <a href="/login" class="login_btn">登录</a> &nbsp;/&nbsp;
-            <a href="/register" class="register_btn">注册</a>
-        </div>
+        {#如果没登陆，就显示登录与注册 #}
+        {% if not current_user.is_active %}
+            <div class="login-btn">
+                <a href="/login" class="login_btn">登录</a> &nbsp;/&nbsp;
+                <a href="/register" class="register_btn">注册</a>
+            </div>
+        {% else %}
+            {#  如果登录了，就显示账户信息和退出     #}
+            <div class="login-btn">
+                {% if not current_user.avatar_url %}
+                    <img src="/static/images/person.png" class="login_pic">
+                {% else %}
+                    <img src="{{ current_user.avatar_url }}" class="login_pic">
+                {% endif %}
+                <a href="/account">{{ current_user.username }}</a>
+                <a href="/logout">退出</a>
+            </div>
+        {% endif %}
+
     </div>
 </header>

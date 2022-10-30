@@ -53,6 +53,10 @@ header {
     color: #59b7a7;
 }
 
+.login_pic{
+    height: 50px;
+}
+
 .login-btn {
     line-height: 59px;
     height: 59px;

@@ -1,13 +1,20 @@
 import random
 
-from flask import Blueprint, current_app, make_response, render_template, request
-from flask_login import login_user
+from flask import (
+    Blueprint,
+    current_app,
+    make_response,
+    redirect,
+    render_template,
+    request,
+)
+from flask_login import current_user, login_user
 
 from application.common import constants
 from application.common.get_captcha import get_captcha_image
 from application.common.sms import send_sms
-from application.extensions import db, redis
-from application.models import CategoryORM, UserORM
+from application.extensions import redis
+from application.models import ArticleORM, CategoryORM, UserORM
 
 index_bp = Blueprint("index", __name__)
 
@@ -16,6 +23,22 @@ index_bp = Blueprint("index", __name__)
 def index():
     """查询分类数据"""
     category_list = CategoryORM.query.all()
+
+    """获取前端需要显示的文章分类数据"""
+    cid = request.args.get("cid", type=int, default=1)
+    """获取前端需要的当前页数"""
+    page = request.args.get("page", type=int, default=1)
+    """获取前端需要的每页数据条数"""
+    per_page = request.args.get("per_page", type=int, default=10)
+
+    """构造查询条件列表"""
+    filters = []
+    if cid == 1:
+        pass
+    else:
+        filters.append(ArticleORM.category_id == cid)
+
+    paginate = ArticleORM.query.order_by(ArticleORM.create_at.desc())
 
     return render_template("bbs/index.html", category_list=category_list)
 
@@ -60,8 +83,7 @@ def register_view2():
     user.username = username
     user.password = password
     user.mobile = phone
-    db.session.add(user)
-    db.session.commit()
+    user.save_to_db()
     return {"status": "success", "message": "注册成功，现在可以去登录了"}
 
 
@@ -116,6 +138,8 @@ def get_captcha():
 
 @index_bp.route("/login")
 def login_view():
+    if current_user.is_active:
+        return redirect("/")
     return render_template("bbs/login.html")
 
 
