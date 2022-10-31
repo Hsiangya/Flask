@@ -18,7 +18,27 @@
             <div class="col-12 col-md-9 px-0">
                 <div class="articles d-flex flex-column">
                     <!--文章列表内容-->
-
+                    {% for article in paginate.items %}
+                        <div class="card mb-2 article" style="height: 168px">
+                            <div class="row g-0">
+                                <div class="col-md-2">
+                                    <img src="{{ article.index_image_url or '/static/upload/xxxxx.jpg' }}"
+                                         class="img-fluid rounded-start"
+                                         alt="...">
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                        <a class="card-title" href="/article/{{ article.id }}">{{ article.title }}</a>
+                                        <a class="card-text" href="/article/{{ article.id }}">{{ article.digest }}</a>
+                                        <p class="card-text small">
+                                            <a href="/author" class="text-muted">{{ article.user.username }}</a>
+                                            <span class="text-muted">・{{ article.create_at }}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
                 <div id="pagination" style="text-align: center"></div>
             </div>

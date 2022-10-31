@@ -2,9 +2,10 @@ import os
 
 from flask import Flask
 
+from application.common.get_bilingual import get_news
 from application.common.utils import setup_log
 from application.extensions import db, login_manager, migrate, redis
-from application.models import UserORM
+from application.models import ArticleORM, UserORM
 from application.views import auth_bp, index_bp
 from configs import config
 
@@ -48,3 +49,23 @@ def register_cli(app):
         """create database tables from models"""
         # db.drop_all()
         db.create_all()
+
+    @app.cli.command()
+    def get_bilingual():
+        news_data = get_news(page=20)
+        for article in news_data:
+            Article = ArticleORM()
+            try:
+                (
+                    Article.title,
+                    Article.digest,
+                    Article.index_image_url,
+                    Article.content,
+                    Article.create_at,
+                    Article.source,
+                    Article.category_id,
+                    Article.user_id,
+                ) = article
+                Article.save_to_db()
+            except Exception as e:
+                print("添加失败")
