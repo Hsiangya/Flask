@@ -22,7 +22,7 @@
                         <div class="card mb-2 article" style="height: 168px">
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{{ article.index_image_url or '/static/upload/xxxxx.jpg' }}"
+                                    <img src="{{ article.index_image_url or '/static/images/Dora_article.png' }}"
                                          class="img-fluid rounded-start"
                                          alt="...">
                                 </div>
@@ -48,13 +48,9 @@
                         <h3>热门文章</h3>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="/article">热门文章1</a></li>
-                        <li class="list-group-item"><a
-                                href="/article">热门文章2</a>
-                        </li>
-                        <li class="list-group-item"><a href="/article">热门文章3</a></li>
-                        <li class="list-group-item"><a href="/article">热门文章4</a></li>
-                        <li class="list-group-item"><a href="/article">热门文章5</a></li>
+                        {% for Article in click_article_list %}
+                            <li class="list-group-item"><a href="/article/{{ Article.id }}">{{ Article.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
 

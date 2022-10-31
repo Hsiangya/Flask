@@ -44,7 +44,7 @@ def index():
         .paginate(page=page, per_page=per_page, error_out=False)
     )
 
-    """热门文章数据"""
+    """热门文章数据 返回点击前10的文章对象"""
     click_article_list = (
         ArticleORM.query.order_by(ArticleORM.clicks.desc()).limit(10).all()
     )
