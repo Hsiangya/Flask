@@ -19,7 +19,7 @@
                 <div class="articles d-flex flex-column">
                     <!--文章列表内容-->
                     {% for article in paginate.items %}
-                        <div class="card mb-2 article" style="height: 168px">
+                        <div class="card mb-2 article" >
                             <div class="row g-0">
                                 <div class="col-md-2">
                                     <img src="{{ article.index_image_url or '/static/images/Dora_article.png' }}"
@@ -40,7 +40,30 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div id="pagination" style="text-align: center"></div>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item {% if not paginate.has_prev %}disabled{% endif %}">
+                        <a class="page-link"
+                           href="{% if paginate.has_prev %}/?page={{ paginate.prev_num }}&cid=
+                               {{ cid }}{% else %}#{% endif %} ">
+                            &lt;</a>
+                    </li>
+                    {% for page in paginate.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+                        <li class="page-item">
+                            {% if page != None %}
+
+                                <a class="page-link {% if paginate.page==page %} active {% endif %}"
+                                   href="/?cid={{ cid }}&page={{ page }}">{{ page }}</a>
+                            {% else %}
+                                <a class="page-link" href="#">...</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    <li class="page-item {% if not paginate.has_next %}disabled{% endif %}">
+                        <a class="page-link"
+                           href="{% if  paginate.has_next %}/?page={{ paginate.next_num }}&cid=
+                               {{ cid }}{% else %}#{% endif %}">&gt;</a>
+                    </li>
+                </ul>
             </div>
             <div class="col-3 pr-0 hidden-sm hidden-md ps-2">
                 <div class="card rank">

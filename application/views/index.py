@@ -198,3 +198,8 @@ def login_view2():
     """登录用户"""
     login_user(user)
     return {"status": "success", "message": "登录成功,将在两秒后跳转"}
+
+
+@index_bp.route("/article/<int:article_id>")
+def article_view(article_id):
+    return render_template("bbs/article.html")
