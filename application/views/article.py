@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template
+from flask import Blueprint, current_app, render_template, request
 from flask_login import current_user
 
 from application.models import ArticleORM, CommentORM
@@ -38,3 +38,27 @@ def article_view(article_id):
         article=article,
         comments=comments,
     )
+
+
+@article_bp.route("/article/article_comment", methods=["POST"])
+def article_comment():
+    """检查用户是否登录"""
+    if not current_user.is_active:
+        return {"code": 4101, "message": "登录之后才能进行评论", "status": "fail"}
+
+    """解析请求参数"""
+    article_id = request.json.get("article_id")
+    content = request.json.get("comment")
+    parent_id = request.json.get("parent_id")
+
+    """添加评论"""
+    comment: CommentORM = CommentORM()
+    comment.user_id = current_user.id
+    comment.article_id = article_id
+    comment.content = content
+    if parent_id:
+        comment.parent_id = parent_id
+    comment.save_to_db()
+
+    """返回结果"""
+    return {"message": "提交评论成功", "status": "success"}

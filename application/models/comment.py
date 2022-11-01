@@ -26,6 +26,10 @@ class CommentORM(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey("info_comment.id"))  # 父评论 id
     parent = db.relationship("CommentORM", remote_side=[id])  # 自关联
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class CommentLikeORM(db.Model):
     """评论点赞"""

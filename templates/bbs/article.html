@@ -194,5 +194,25 @@
     </div>
 </main>
 {% include 'bbs/includs/footer.html' %}
+<script src="/static/js/jquery-3.6.1.min.js"></script>
+<script src="/static/layui/layui.js"></script>
+<script>
+  // 文章评论请求参数
+  async function article_comment(data) {
+    const options = {
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    const response = await fetch('/article/article_comment', options);
+    return await response.json();
+  }
+
+
+
+
+</script>
 </body>
 </html>
