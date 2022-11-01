@@ -210,7 +210,33 @@
     return await response.json();
   }
 
+  $(function() {
+    const article_id=location.pathname.split('/')[2]
 
+
+    $('.comment_form').submit(async function(e){
+      e.preventDefault()
+
+      const news_comment=$('.comment_input').val()
+      if (!news_comment){
+        layer.msg('请输入评论内容');
+      }
+        // 文章id 评论内容
+      let params={
+        'article_id':article_id,
+        'comment':news_comment
+      }
+
+      const result=await article_comment(params);
+
+      if (result.status==='success'){
+        layui.layer.msg(result.message);
+        setTimeout(function(){
+          location.reload();
+        },1000)
+      }
+    })
+  });
 
 
 </script>
