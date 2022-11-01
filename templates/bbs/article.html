@@ -210,32 +210,72 @@
     return await response.json();
   }
 
+  // 收藏文章请求
+  async function article_collect(data) {
+    const options = {
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    const response = await fetch('/article/collect', options);
+    return await response.json();
+  }
+
   $(function() {
-    const article_id=location.pathname.split('/')[2]
+    const article_id = location.pathname.split('/')[2];
 
+    // 提交评论
+    $('.comment_form').submit(async function(e) {
+      e.preventDefault();
 
-    $('.comment_form').submit(async function(e){
-      e.preventDefault()
-
-      const news_comment=$('.comment_input').val()
-      if (!news_comment){
+      const news_comment = $('.comment_input').val();
+      if (!news_comment) {
         layer.msg('请输入评论内容');
       }
-        // 文章id 评论内容
-      let params={
-        'article_id':article_id,
-        'comment':news_comment
-      }
+      // 文章id 评论内容
+      let params = {
+        'article_id': article_id,
+        'comment': news_comment,
+      };
 
-      const result=await article_comment(params);
+      const result = await article_comment(params);
 
-      if (result.status==='success'){
+      if (result.status === 'success') {
         layui.layer.msg(result.message);
-        setTimeout(function(){
+        setTimeout(function() {
           location.reload();
-        },1000)
+        }, 1000);
       }
-    })
+    });
+
+    // 取消收藏
+    $('.collection').on({
+      mouseover: function() {
+        $(this).find('.out').hide();
+        $(this).find('.over').show();
+      },
+      mouseout: function() {
+        $(this).find('.out').show();
+        $(this).find('.over').hide();
+      },
+      click: async function() {
+        const params = {
+          'article_id': article_id,
+          'action': 'cancel_collect',
+        };
+        const result = await article_collect(params);
+        if (result.code === 0) {
+          location.reload();  // 加载整个页面
+          // 可以进行动态修改用 jquery 将取消收藏的按钮隐藏,将收藏的按钮显示
+        } else if (result.code === 4101) {
+          window.location.href = '/login';
+        } else {
+          layui.layer.msg(result.message);
+        }
+      },
+    });
   });
 
 
