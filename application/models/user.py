@@ -24,7 +24,9 @@ class UserORM(db.Model, UserMixin):
     password_hash = db.Column(db.String(128), nullable=False)  # 加密的密码
     mobile = db.Column(db.String(11), unique=True, nullable=False)  # 手机号
     email = db.Column(db.String(50))  # 用户邮箱
-    avatar_url = db.Column(db.String(256))  # 用户头像路径
+    avatar_url = db.Column(
+        db.String(256), default="/static/images/person.png"
+    )  # 用户头像路径
     birthday = db.Column(db.DateTime, default=datetime.now)  # 最后一次登录时间
     is_admin = db.Column(db.Boolean, default=False)  # 是否管理员
     signature = db.Column(db.String(512))  # 用户签名

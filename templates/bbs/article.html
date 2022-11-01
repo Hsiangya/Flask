@@ -52,7 +52,7 @@
                             <!--评论栏-登陆之后显示用户头像并进行评论-->
                             <form action="" class="comment_form">
                                 <div class="person_pic">
-                                    <img src="/static/images/worm.jpg" alt="用户图标">
+                                    <img src="{{ current_user.avatar_url }}" alt="用户图标">
                                     <textarea placeholder="请发表您的评论" class="comment_input"></textarea>
                                 </div>
                                 <input type="submit" name="" value="评 论" class="comment_sub">
@@ -102,41 +102,6 @@
                                     </div>
                                 </div>
                             {% endfor %}
-
-                            <div class="comment">
-                                <div class="person_pic ">
-                                    <img src="/static/images/worm.jpg" alt="用户图标">
-                                </div>
-                                <div class="comment-content">
-                                    <div class="user_name ">用户张山</div>
-                                    <div class="comment_text ">
-                                        写的不错，学习了，学习的道路上一起进步，也期待你的关注与支持！
-                                    </div>
-                                    <div class="reply_text_con ">
-                                        <div class="user_name2">用户李思</div>
-                                        <div class="reply_text">
-                                            个人认为，这篇文章同样代表了开源的另一个现实——令人悲哀。推广请好好推，别把应聘和推广以及开源相提并论，这样只会拉低你们开源的价值。
-                                        </div>
-                                    </div>
-                                    <div class="comment-details">
-                                        <div class="comment_time ">2020-01-01 00:00:00</div>
-                                        <div>
-                                            <a href="javascript:;" class="comment_reply">回复</a>
-                                            <a href="javascript:;" class="comment_up has_comment_up">1</a>
-                                        </div>
-                                    </div>
-                                    <form class="reply_form">
-                                        <div>
-                                            <textarea class="reply_input"></textarea>
-                                            <div class="sub_submit">
-                                                <input type="submit" name="" value="回复" class="reply_sub">
-                                                <input type="reset" name="" value="取消" class="reply_cancel">
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -147,7 +112,7 @@
                     <div class="card author_card p-2 mb-2">
                         <div class="card_header">
                             <a href="/author/{{ article.user.id }}" target="_blank" class="author_pic">
-                                <img src="{{ article.user.avatar_url or 'https://qingdeng123-1257113111.cos.ap-nanjing.myqcloud.com/user_pic/2022-02/73b879c8-35e2-423a-ab13-92609797103e.jpg' }}"
+                                <img src="{{ article.user.avatar_url }}"
                                      alt="author_pic">
                             </a>
                             <a href="/author/{{ article.user.id }}" target="_blank"
@@ -168,7 +133,8 @@
                                     <span class="out">已关</span>
                                     <span class="over d-none">取关</span>
                                 </a>
-                                <a href="javascript:;" class="focus" data-userid="1" style="display: inline-block ">
+                                <a href="javascript:;" class="focus" data-userid="1"
+                                   style="display: inline-block ">
                                     关注
                                 </a>
                             </div>
@@ -201,12 +167,13 @@
   async function article_comment(data) {
     const options = {
       method: 'POST',
-      header: {
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     };
     const response = await fetch('/article/article_comment', options);
+    console.log(response.json());
     return await response.json();
   }
 
@@ -214,12 +181,12 @@
   async function article_collect(data) {
     const options = {
       method: 'POST',
-      header: {
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     };
-    const response = await fetch('/article/collect', options);
+    const response = await fetch('/article/article_collect', options);
     return await response.json();
   }
 
@@ -250,8 +217,38 @@
       }
     });
 
+    // 收藏
+    $('.collection').click(function() {
+      let send_data = {
+        action: 'collect',
+        article_id: article_id,
+      };
+
+      fetch('/article/article_collect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(send_data),
+      }).then(function(res) {
+        return res.json();
+      }).then(function(ret) {
+        if (ret.code === 0) {
+          layui.layer.msg(ret.message);
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        } else if (ret.code === 4101) {
+          layui.layer.msg(ret.message);
+          setTimeout(function() {
+            location.href = `/login?next=${location.pathname}`;
+          }, 2000);
+        }
+      });
+    });
+
     // 取消收藏
-    $('.collection').on({
+    $('.collected').on({
       mouseover: function() {
         $(this).find('.out').hide();
         $(this).find('.over').show();

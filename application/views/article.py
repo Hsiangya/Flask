@@ -38,6 +38,7 @@ def article_view(article_id):
         click_article_list=click_article_list,
         article=article,
         comments=comments,
+        current_user=current_user,
     )
 
 
@@ -77,14 +78,12 @@ def article_collect():
 
     if action not in ["collect", "cancel_collect"]:
         return {"status": "fail", "message": "请求参数错误", "code": 4102}
-    article: ArticleORM = ArticleORM()
+    article: ArticleORM = ArticleORM.query.get(int(article_id))
     if not article:
-        return {
-            "status": "fail",
-            "message": "文章不存在",
-        }
+        return {"status": "fail", "message": "文章不存在"}
 
     """执行收藏逻辑"""
+
     if action == "collect":
         current_user.collection_articles.append(article)
         message = "收藏文章成功"
