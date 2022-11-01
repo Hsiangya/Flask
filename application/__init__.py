@@ -6,7 +6,7 @@ from application.common.get_bilingual import get_news
 from application.common.utils import setup_log
 from application.extensions import db, login_manager, migrate, redis
 from application.models import ArticleORM, UserORM
-from application.views import auth_bp, index_bp
+from application.views import article_bp, index_bp
 from configs import config
 
 
@@ -40,7 +40,7 @@ def register_extensions(app: Flask):
 def register_blueprint(app: Flask):
     """注册蓝图"""
     app.register_blueprint(index_bp)
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(article_bp)
 
 
 def register_cli(app):
