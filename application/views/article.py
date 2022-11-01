@@ -1,6 +1,7 @@
 from flask import Blueprint, current_app, render_template, request
 from flask_login import current_user
 
+from application.extensions import db
 from application.models import ArticleORM, CommentORM
 
 article_bp = Blueprint("article", __name__)
@@ -62,3 +63,33 @@ def article_comment():
 
     """返回结果"""
     return {"message": "提交评论成功", "status": "success"}
+
+
+@article_bp.route("/article/article_collect", methods=["POST"])
+def article_collect():
+    """检查用户是否登录"""
+    if not current_user.is_active:
+        return {"code": 4101, "message": "登录之后才能进行收藏", "status": "fail"}
+
+    """获取请求参数"""
+    article_id = request.json.get("article_id")
+    action = request.json.get("action")
+
+    if action not in ["collect", "cancel_collect"]:
+        return {"status": "fail", "message": "请求参数错误", "code": 4102}
+    article: ArticleORM = ArticleORM()
+    if not article:
+        return {
+            "status": "fail",
+            "message": "文章不存在",
+        }
+
+    """执行收藏逻辑"""
+    if action == "collect":
+        current_user.collection_articles.append(article)
+        message = "收藏文章成功"
+    elif action == "cancel_collect":
+        current_user.collection_articles.remove(article)
+        message = "取消收藏文章成功"
+    db.session.commit()
+    return {"status": "success", "code": 0, "message": message}
