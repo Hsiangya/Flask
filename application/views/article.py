@@ -38,7 +38,6 @@ def article_view(article_id):
         click_article_list=click_article_list,
         article=article,
         comments=comments,
-        current_user=current_user,
     )
 
 

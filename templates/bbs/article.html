@@ -118,7 +118,7 @@
                             <a href="/author/{{ article.user.id }}" target="_blank"
                                class="author_name">{{ article.user.username }}</a>
                         </div>
-                        <div class="text-muted my-2">{{ article.user.signature or '这个人什么都没有留下' }}</div>
+                        <div class="text-muted my-2">{{ article.user.signature }}</div>
                         <div class="d-flex flex-row">
                             <div class="writings d-flex flex-column">
                                 <span class="text-muted">总篇数</span>
@@ -273,6 +273,42 @@
         }
       },
     });
+
+    // 显示回复表单
+    $('.comment_reply').click(function() {
+      $(this).parents('.comment-details').next().toggle();
+    });
+
+    // 影藏回复表单
+    $('.reply_cancel').click(function() {
+      $(this).parents('.reply_form').toggle();
+    });
+    // 回复评论 二级
+    $('.reply_sub').click(async function(e) {
+      e.preventDefault();
+      // 获取点击的元素
+      const parent_id = $(this).parents('form').attr('data-comment-id');
+      const comment = $(this).parent().siblings('.reply_input').val();
+
+      if (!comment) {
+        alert('请输入评论内容');
+        return;
+      }
+
+      const params = {
+        'article_id': article_id,
+        'comment': comment,
+        'parent_id': parent_id,
+      };
+      console.log(params);
+      const result = await article_comment(params);
+      if (result.success === 'success') {
+        window.location.reload();
+      } else {
+        console.log(result.message);
+      }
+    });
+
   });
 
 
