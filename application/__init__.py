@@ -3,6 +3,7 @@ import os
 from flask import Flask
 
 from application.common.get_bilingual import get_news
+from application.common.get_life import get_life_news
 from application.common.utils import setup_log
 from application.extensions import db, login_manager, migrate, redis
 from application.models import ArticleORM, UserORM
@@ -67,5 +68,25 @@ def register_cli(app):
                     Article.user_id,
                 ) = article
                 Article.save_to_db()
+            except Exception as e:
+                print("添加失败")
+
+    @app.cli.command()
+    def get_life():
+        life_data = get_life_news(page=14)
+        for life in life_data:
+            life_article = ArticleORM()
+            try:
+                (
+                    life_article.title,
+                    life_article.digest,
+                    life_article.index_image_url,
+                    life_article.content,
+                    life_article.create_at,
+                    life_article.source,
+                    life_article.category_id,
+                    life_article.user_id,
+                ) = life
+                life_article.save_to_db()
             except Exception as e:
                 print("添加失败")
