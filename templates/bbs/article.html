@@ -130,12 +130,12 @@
                             </div>
                             <div class="ms-5">
                                 <a href="javascript:;" class="focused" data-userid="{{ article.user.id }}"
-                                   style="display: none  ">
+                                   style="display: {% if article.user in current_user.followed %} inline-block {% else %} none {% endif %}  ">
                                     <span class="out">已关</span>
                                     <span class="over d-none">取关</span>
                                 </a>
                                 <a href="javascript:;" class="focus" data-userid="{{ article.user.id }}"
-                                   style="display: inline-block ">
+                                   style="display: {% if article.user not in current_user.followed %} inline-block {% else %} none {% endif %}">
                                     关注
                                 </a>
                             </div>
@@ -346,25 +346,37 @@
     });
 
     // 取消关注
-    $('.focused').click(async function() {
-      const user_id = $(this).attr('data-userid');
-      const params = {
-        'action': 'unfollow',
-        'user_id': user_id,
-      };
-      const result = await followed_user(params);
-      if (result.status === 'success') {
-        window.location.reload();
-      } else if (
-          result.code === '4101'
-      ) {
-        window.location.href = '/login';
-      } else {
-        //取消关注失败
-        alert(result.message);
-      }
+    $('.focused').on({
+      mouseover: function() {
+        $(this).find('.out').hide();
+        $(this).find('.over').show();
+      },
+      mouseout: function() {
+        $(this).find('.out').show();
+        $(this).find('.over').hide();
+      },
+      click: async function() {
+        const user_id = $(this).attr('data-userid');
+        const params = {
+          'action': 'unfollow',
+          'user_id': user_id,
+        };
+        const result = await followed_user(params);
+        if (result.status === 'success') {
+          window.location.reload();
+        } else if (
+            result.code === '4101'
+        ) {
+          window.location.href = '/login';
+        } else {
+          //取消关注失败
+          alert(result.message);
+        }
+
+      },
 
     });
+
   });
 
 
