@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, request
 from flask_login import current_user
 
 from application.extensions import db
-from application.models import ArticleORM, CommentORM
+from application.models import ArticleORM, CommentORM, UserORM
 
 article_bp = Blueprint("article", __name__)
 
@@ -91,3 +91,35 @@ def article_collect():
         message = "取消收藏文章成功"
     db.session.commit()
     return {"status": "success", "code": 0, "message": message}
+
+
+@article_bp.post("/article/followed_user")
+def followed_user():
+    """ "检查用户是否登录"""
+    if not current_user.is_active:
+        return {"status": "fail", "code": 4101, "message": "用户登录之后才能进行关注"}
+
+    """解析请求参数"""
+    user_id = request.json.get("user_id")
+    action = request.json.get("action")
+
+    """校验参数"""
+    author: UserORM = UserORM.query.get(user_id)
+    if not author:
+        return {"status": "fail", "message": "作者不存在"}
+    if action == "follow":
+        if author not in current_user.followed:
+            current_user.followed.append(author)
+        else:
+            return {"status": "fail", "message": "已经关注过了,不能重复关注"}
+        message = "关注用户成功"
+    elif action == "unfollow":
+        if author not in current_user.followed:
+            return {"status": "fail", "message": "未关注该用户，无法取消关注"}
+        else:
+            current_user.followed.remove(author)
+        message = "取消关注用户成功"
+    else:
+        message = "操作不存在"
+    db.session.commit()
+    return {"status": "success", "message": message}
