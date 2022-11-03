@@ -6,26 +6,22 @@ from application.common.get_bilingual import requests_text
 标题,来源,摘要,文章内容 图片路径,时间
 所属分类,文章作者
 """
-css_title = ".busBox3>div>div>h3>a::text"
-css_image = ".busBox3>div>.mr10>a>img::attr(src)"
-css_url = ".busBox3>div>div>h3>a::attr(href)"
-css_digest = ".busBox3>div>div:nth-child(2)>p::text"
 
 
-def get_title(html_text, title, image, url, digest):
+def get_title(html_text):
     """获取标题 图片地址 摘要"""
     selector = parsel.Selector(html_text)
     """标题"""
-    title_list = selector.css(title).getall()
+    title_list = selector.css(".busBox3>div>div>h3>a::text").getall()
     # print(title_list)
     """图片"""
-    image_list = selector.css(image).getall()
+    image_list = selector.css(".busBox3>div>.mr10>a>img::attr(src)").getall()
     # print(image_list)
     """内容url"""
-    url_list = selector.css(url).getall()
+    url_list = selector.css(".busBox3>div>div>h3>a::attr(href)").getall()
     # print(url_list)
     """摘要"""
-    digest_list = selector.css(digest).getall()
+    digest_list = selector.css(".busBox3>div>div:nth-child(2)>p::text").getall()
     # print(digest_list)
     index_list = zip(url_list, title_list, digest_list, image_list)
     return index_list

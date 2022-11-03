@@ -129,11 +129,12 @@
                                 <b>{{ article.user.followers.count() }}</b>
                             </div>
                             <div class="ms-5">
-                                <a href="javascript:;" class="focused" data-userid="1" style="display: none  ">
+                                <a href="javascript:;" class="focused" data-userid="{{ user.id }}"
+                                   style="display: none  ">
                                     <span class="out">已关</span>
                                     <span class="over d-none">取关</span>
                                 </a>
-                                <a href="javascript:;" class="focus" data-userid="1"
+                                <a href="javascript:;" class="focus" data-userid="{{ user.id }}"
                                    style="display: inline-block ">
                                     关注
                                 </a>
@@ -190,6 +191,19 @@
     return await response.json();
   }
 
+  async function followed_user(data) {
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+    const response = await fetch('/article/followed_user', options);
+    return await response.json();
+  }
+
+  //等同于$(document).ready(function() {....}) 页面加载完后才执行函数，更安全
   $(function() {
     const article_id = location.pathname.split('/')[2];
 
@@ -283,6 +297,7 @@
     $('.reply_cancel').click(function() {
       $(this).parents('.reply_form').toggle();
     });
+
     // 回复评论 二级
     $('.reply_sub').click(async function(e) {
       e.preventDefault();
@@ -309,6 +324,47 @@
       }
     });
 
+    // 关注用户 向后台提交作者id，提交关注/取消关注动作，提交当前用户id(current_user)
+    $('.focus').click(async function() {
+      const user_id = $(this).attr('data-userid');
+      const params = {
+        'action': 'follow',
+        'user_id': user_id,
+      };
+      const result = await followed_user(params);
+      if (result.status === 'success') {
+        window.location.reload();
+      } else if (
+          result.code === '4101'
+      ) {
+        window.location.href = '/login';
+      } else {
+        //关注失败
+        alert(result.message);
+      }
+
+    });
+
+    // 取消关注
+    $('.focused').click(async function() {
+      const user_id = $(this).attr('data-userid');
+      const params = {
+        'action': 'unfollow',
+        'user_id': user_id,
+      };
+      const result = await followed_user(params);
+      if (result.status === 'success') {
+        window.location.reload();
+      } else if (
+          result.code === '4101'
+      ) {
+        window.location.href = '/login';
+      } else {
+        //取消关注失败
+        alert(result.message);
+      }
+
+    });
   });
 
 
