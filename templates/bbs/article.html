@@ -87,7 +87,19 @@
                                             <div class="comment_time ">{{ comment.create_at }}</div>
                                             <div>
                                                 <a href="javascript:;" class="comment_reply">回复</a>
-                                                <a href="javascript:;" class="comment_up">赞</a>
+                                                <a href="javascript:;" class="comment_up
+                                                    {% for commit_like in current_user.commit_likes %}
+                                                        {% if commit_like.comment_id == comment.id %}
+                                                            has_comment_up
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    ">
+                                                    {% if comment.like_count %}
+                                                        {{ comment.like_count }}
+                                                    {% else %}
+                                                        赞
+                                                    {% endif %}
+                                                </a>
                                             </div>
                                         </div>
                                         <form class="reply_form" data-comment-id="{{ comment.id }}">
@@ -377,6 +389,27 @@
 
     });
 
+    // 点赞评论
+    $('comment_up').click(function() {
+      let action = 'add';
+      // 默认状态是关注，如果已经是关注，则动作是取消点赞
+      if ($('comment_up').hasClass('has_comment_up')) {
+        action = 'remove';
+      }
+      const comment_id = $(this).parents('comment-details').siblings('reply_form').attr('data-comment-id');
+
+      fetch('/article/comment_like', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({'action': action, 'comment_id': comment_id}),
+      }).then(response => response.json()).then(res => {
+        if (res.status === 'success') {
+          location.reload();
+        }
+      });
+    });
+
+    //
   });
 
 
