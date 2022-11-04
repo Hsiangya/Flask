@@ -35,7 +35,6 @@ class CommentLikeORM(db.Model):
     """评论点赞"""
 
     __tablename__ = "info_comment_like"
-
     comment_id = db.Column(
         "comment_id", db.Integer, db.ForeignKey("info_comment.id"), primary_key=True
     )  # 评论编号
@@ -47,3 +46,11 @@ class CommentLikeORM(db.Model):
     update_at = db.Column(
         db.DateTime, default=datetime.now, onupdate=datetime.now
     )  # 记录的更新时间
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_form_db(self):
+        db.session.delete(self)
+        db.session.commit()

@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, render_template, request
 from flask_login import current_user
 
 from application.extensions import db
-from application.models import ArticleORM, CommentORM, UserORM
+from application.models import ArticleORM, CommentLikeORM, CommentORM, UserORM
 
 article_bp = Blueprint("article", __name__)
 
@@ -123,3 +123,46 @@ def followed_user():
         message = "操作不存在"
     db.session.commit()
     return {"status": "success", "message": message}
+
+
+@article_bp.post("/article/comment_like")
+def article_comment_like():
+    """ "检查用户是否登录"""
+    if not current_user.is_active:
+        return {"status": "fail", "code": 4101, "message": "用户登录之后才能进行关注"}
+    """解析i请求参数"""
+    action = request.json.get("action")
+    comment_id = request.json.get("comment_id")
+
+    """添加点赞逻辑"""
+    """1. 查询是否有该条评论"""
+    comment: CommentORM = CommentORM.query.get("comment_id")
+    if not comment:
+        return {"message": "点赞评论不存在", "status": "fail"}
+    """ 2. 提交数据"""
+    if action == "add":
+        """查询点赞表中是否已经有该点赞模型数据，依据评论id=前端评论id+用户id=当前登录用户"""
+        comment_like = CommentLikeORM.query.filter(
+            CommentLikeORM.comment_id == comment_id,
+            CommentLikeORM.user_id == current_user,
+        ).first()
+        if not comment_like:
+            """之前没有点赞过，该评论点赞数+1"""
+            comment.like_count += 1
+            """添加点赞模型数据"""
+            comment_like = CommentLikeORM()
+            comment_like.user_id = current_user
+            comment_like.comment_id = comment_id
+            comment_like.save_to_db()
+        else:
+            """已经点赞过了"""
+            return {"status": "fail", "message": "已经点赞过了,不能重复点赞"}
+        return {"status": "success", "message": "点赞评论成功"}
+    elif action == "remove":
+        comment_like = CommentLikeORM.query.filter(
+            CommentLikeORM.comment_id == comment_id,
+            CommentLikeORM.user_id == current_user,
+        ).first()
+        comment.like_count -= 1
+        comment_like.delete_form_db()
+        return {"status": "success", "message": "取消点赞评论成功"}
