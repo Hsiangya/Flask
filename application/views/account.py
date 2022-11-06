@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template
-from flask_login import login_required
+from flask import Blueprint, render_template, request
+from flask_login import current_user, login_required
 
 account_bp = Blueprint("account", __name__)
 
@@ -9,3 +9,14 @@ account_bp = Blueprint("account", __name__)
 @login_required
 def account_info():
     return render_template("account/index.html")
+
+
+@account_bp.post("/account/info")
+def account_info2():
+    """获取参数"""
+    current_user.username = request.json.get("username")
+    current_user.signature = request.json.get("signature")
+    current_user.gender = request.json.get("gender")
+    current_user.birthday = request.json.get("birth_day")
+    current_user.save_to_db()
+    return {"status": "success", "message": "修改基本信息成功"}
