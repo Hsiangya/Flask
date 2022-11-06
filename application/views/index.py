@@ -8,7 +8,7 @@ from flask import (
     render_template,
     request,
 )
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 from application.common import constants
 from application.common.get_captcha import get_captcha_image
@@ -27,6 +27,7 @@ def index():
     """获取前端需要显示的文章分类数据"""
     cid = request.args.get("cid", type=int, default=1)
     """获取前端需要的当前页数"""
+    print(cid)
     page = request.args.get("page", type=int, default=1)
     """获取前端需要的每页数据条数"""
     per_page = request.args.get("per_page", type=int, default=10)
@@ -36,11 +37,12 @@ def index():
     if cid == 1:
         pass
     else:
+        """将分类查询对象添加至列表中"""
         filters.append(ArticleORM.category_id == cid)
-
+    print(filters)
     paginate = (
         (ArticleORM.query.order_by(ArticleORM.create_at.desc()))
-        .filter()
+        .filter(*filters)
         .paginate(page=page, per_page=per_page, error_out=False)
     )
 
@@ -198,3 +200,9 @@ def login_view2():
     """登录用户"""
     login_user(user)
     return {"status": "success", "message": "登录成功,将在两秒后跳转"}
+
+
+@index_bp.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")

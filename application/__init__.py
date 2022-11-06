@@ -7,7 +7,7 @@ from application.common.get_life import get_life_news
 from application.common.utils import setup_log
 from application.extensions import db, login_manager, migrate, redis
 from application.models import ArticleORM, UserORM
-from application.views import article_bp, index_bp
+from application.views import account_bp, article_bp, index_bp
 from configs import config
 
 
@@ -42,6 +42,7 @@ def register_blueprint(app: Flask):
     """注册蓝图"""
     app.register_blueprint(index_bp)
     app.register_blueprint(article_bp)
+    app.register_blueprint(account_bp)
 
 
 def register_cli(app):

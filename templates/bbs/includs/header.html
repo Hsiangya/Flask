@@ -2,7 +2,7 @@
     <div class="container d-flex justify-content-between">
         <!-- 头部 logo -->
         <a href="/" class="logo">
-            <img src="/static/images/header/Dora%20header5.png" alt="" style="height: 50px">
+            <img src="/static/images/logo.png" alt="" style="height: 50px">
         </a>
         <!-- 中间分类栏 -->
         <ul class="menu d-flex justify-content-between">
@@ -10,11 +10,6 @@
                 <li data-cid="{{ category.id }}" class="{% if category.id == cid %}active{% endif %}">
                     <a href="/?cid={{ category.id }}">{{ category.name }}</a></li>
             {% endfor %}
-            {#<li data-cid="1"><a href="/?cid=1">基础</a></li>#}
-            {#<li data-cid="2"><a href="/?cid=2">进阶</a></li>#}
-            {#<li data-cid="3"><a href="/?cid=3">爬虫</a></li>#}
-            {#<li data-cid="4"><a href="/?cid=4">数分</a></li>#}
-            {#<li data-cid="5"><a href="/?cid=5">全栈</a></li>#}
         </ul>
         <!--登录注册栏-->
         {#如果没登陆，就显示登录与注册 #}

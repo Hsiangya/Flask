@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Dora-个人中心</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/account.css">
+    <style>
+        .header {
+            height: 59px;
+            border-bottom: 1px solid #d2d2d2;
+            background-color: #ffffff;
+        }
+
+        .header-demo {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-header header">
+    <div class="layui-container">
+        <div class="header-demo">
+            <!-- 头部 logo -->
+            <a href="/" class="logo">
+                <img src="/static/images/logo.png" alt="" style="height: 50px">
+            </a>
+
+            <!--登录注册栏-->
+            <div class="login-btn">
+                {#                <a href="javascript:;" class="login_btn">登录</a> /#}
+                {#                <a href="javascript:;" class="register_btn">注册</a>#}
+                <a href="/logout">退出</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--中间内容部分-->
+<main>
+    <div class="layui-container" style="margin-top: 10px">
+        <!--新闻列表-->
+        <div class="layui-row">
+            <div class="layui-col-md3" style="padding-right: 10px;">
+                <!--个人详情数据展示-->
+                {% block profile_menu %}
+                    <div class="profile-menu" style="padding-top: 10px">
+                        <div class="profile-picture">
+                            <img src="{{ current_user.avatar_url }}" alt="用户图片">
+                        </div>
+                        <div class="profile-name">{{ current_user.username }}</div>
+                        <!--个人信息操作列表-->
+                        <ul class="profile-option-list p-0">
+                            <li>
+                                <a class="active" href="/account/info">基本资料<i class="layui-icon layui-icon-right"></i></a>
+                            </li>
+                            <li><a href="/account/avatar">修改头像<i class="layui-icon layui-icon-right"></i></a></li>
+                            <li><a href="/account/password">修改密码<i class="layui-icon layui-icon-right"></i></a></li>
+                            <li><a href="/account/followed">我的关注<i class="layui-icon layui-icon-right"></i></a></li>
+                            <li><a href="/account/collection">我的收藏<i class="layui-icon layui-icon-right"></i></a></li>
+                            <li><a href="/account/articles">文章列表<i class="layui-icon layui-icon-right"></i></a></li>
+                            <li><a href="/account/release">文章发布<i class="layui-icon layui-icon-right"></i></a></li>
+                        </ul>
+                    </div>
+                {% endblock %}
+            </div>
+            <div class="layui-col-md9">
+                {% block profile_card %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="/static/layui/layui.js"></script>
+{% block footer_script %}
+{% endblock %}
+</body>
+</html>
