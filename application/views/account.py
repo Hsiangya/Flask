@@ -20,3 +20,8 @@ def account_info2():
     current_user.birthday = request.json.get("birth_day")
     current_user.save_to_db()
     return {"status": "success", "message": "修改基本信息成功"}
+
+
+@account_bp.get("/account/avatar")
+def account_avatar():
+    return render_template("account/user_avatar.html")

@@ -1,0 +1,33 @@
+{% extends 'account/base.html' %}
+
+
+
+{% block profile_card %}
+    <div class="profile-card py-3">
+        <span class="layui-breadcrumb" style="padding: 15px;display: block;">
+          <a href="/account">Dora-个人中心</a>
+          <a href="/account/avatar">修改用户头像</a>
+        </span>
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">当前头像：</label>
+                <div class="layui-input-block avatar">
+                    <img src="{{ current_user.avatar_url }}" alt="用户图片" class="now_user_pic">
+                </div>
+            </div>
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">上传图像：</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block footer_script %}
+
+{% endblock %}
