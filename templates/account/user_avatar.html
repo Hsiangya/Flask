@@ -12,14 +12,14 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">当前头像：</label>
                 <div class="layui-input-block avatar">
-                    <img src="{{ current_user.avatar_url }}" alt="用户图片" class="now_user_pic">
+                    <img src="{{ current_user.avatar_url }}" alt="用户图片" class="now_user_pic" style="height: 300px">
                 </div>
             </div>
             <div class="layui-form-item">
 
                 <label class="layui-form-label">上传图像：</label>
                 <div class="layui-input-block">
-                    <button type="button" class="layui-btn" id="test1">
+                    <button type="button" class="layui-btn" id="upload">
                         <i class="layui-icon">&#xe67c;</i>上传图片
                     </button>
                 </div>
@@ -29,5 +29,30 @@
 {% endblock %}
 
 {% block footer_script %}
+    <script>
+      layui.use(['upload', 'layer'], function() {
+        var layer = layui.layer;
+        var upload = layui.upload;
 
+        //执行实例
+        var uploadInst = upload.render({
+          elem: '#upload' //绑定元素
+          , url: '/account/avatar' //上传接口
+          , done: function(res) {
+            //上传完毕回调
+            if (res.status === 'success') {
+              layer.msg(res.message);
+              setTimeout(function(){
+                window.location.reload()
+              }, 1000);
+            }
+
+          }
+          , error: function() {
+            //请求异常回调
+
+          },
+        });
+      });
+    </script>
 {% endblock %}

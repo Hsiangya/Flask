@@ -1,5 +1,9 @@
 from flask import Blueprint, render_template, request
 from flask_login import current_user, login_required
+from werkzeug.datastructures import FileStorage
+
+from application.common.utils import upload_file
+from application.models.user import UserORM, db
 
 account_bp = Blueprint("account", __name__)
 
@@ -25,6 +29,19 @@ def account_info2():
 @account_bp.get("/account/avatar")
 def account_avatar():
     return render_template("account/user_avatar.html")
+
+
+@account_bp.post("/account/avatar")
+def account_avatar_upload():
+    """获取文件内容，文件内容为2进制"""
+    file: FileStorage = request.files.get("file")
+    """将文件保存并返回url"""
+    avatar_url = upload_file(file)
+    # print("-------------" + avatar_url)
+    user: UserORM = UserORM.query.get(current_user.id)
+    user.avatar_url = avatar_url
+    user.save_to_db()
+    return {"status": "success", "message": "图片上传成功", "avatar_url": avatar_url}
 
 
 @account_bp.get("/account/password")

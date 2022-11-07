@@ -1,5 +1,11 @@
+import hashlib
 import logging
+import os
+from datetime import datetime
 from logging.handlers import RotatingFileHandler
+
+from flask import current_app
+from werkzeug.datastructures import FileStorage
 
 from configs import config
 
@@ -19,3 +25,30 @@ def setup_log(config_name):
     file_log_handler.setFormatter(formatter)
     # 为全局的日志工具对象（flask app使用的）添加日志记录器
     logging.getLogger().addHandler(file_log_handler)
+
+
+def upload_file(avatar: FileStorage):
+    """对图片进行重命名，处理 并存到目录中 并返回url"""
+    """构造当前项目的路径"""
+    path = os.path.dirname(current_app.instance_path)
+    avatar_dir = os.path.join(
+        path, "static", "avatar", datetime.today().strftime("%Y-%m")
+    )
+    if not os.path.exists(avatar_dir):
+        os.makedirs(avatar_dir)
+    """从 FileStorage 对象里面获取文件名字"""
+    filename = avatar.filename
+    """名字相同 内容不同"""
+    suffix = filename.split(".")[-1]
+
+    """内容相同 名字不同"""
+    content = avatar.stream.read()  # 读取图片之后 就没有内容了
+    name = hashlib.md5(content).hexdigest()  # 获取 md5 的值
+    file_name = ".".join([name, suffix])
+
+    """将文件保存"""
+    open(os.path.join(avatar_dir, file_name), mode="wb").write(content)
+    avatar_url = "/".join(
+        ["/static", "avatar", datetime.today().strftime("%Y-%m"), file_name]
+    )
+    return avatar_url
