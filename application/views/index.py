@@ -97,6 +97,7 @@ def register_view2():
     if real_sms_code != sms_captcha:
         return {"status": "fail", "message": "短信验证码错误，请输入正确的验证码"}
     user = UserORM()
+    user.nick_name = username
     user.username = username
     user.password = password
     user.mobile = phone

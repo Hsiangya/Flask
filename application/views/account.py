@@ -19,7 +19,7 @@ def account_info():
 @login_required
 def account_info2():
     """获取参数"""
-    current_user.username = request.json.get("username")
+    current_user.nick_name = request.json.get("nick_name")
     current_user.signature = request.json.get("signature")
     current_user.gender = request.json.get("gender")
     current_user.birthday = request.json.get("birth_day")

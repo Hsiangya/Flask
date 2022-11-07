@@ -22,7 +22,7 @@
             {#  如果登录了，就显示账户信息和退出     #}
             <div class="login-btn">
                     <img src="{{ current_user.avatar_url }}" class="login_pic">
-                <a href="/account">{{ current_user.username }}</a>
+                <a href="/account">{{ current_user.nick_name }}</a>
                 <a href="/logout">退出</a>
             </div>
         {% endif %}
