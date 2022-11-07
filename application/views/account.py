@@ -16,6 +16,7 @@ def account_info():
 
 
 @account_bp.post("/account/info")
+@login_required
 def account_info2():
     """获取参数"""
     current_user.username = request.json.get("username")
@@ -27,11 +28,13 @@ def account_info2():
 
 
 @account_bp.get("/account/avatar")
+@login_required
 def account_avatar():
     return render_template("account/user_avatar.html")
 
 
 @account_bp.post("/account/avatar")
+@login_required
 def account_avatar_upload():
     """获取文件内容，文件内容为2进制"""
     file: FileStorage = request.files.get("file")
@@ -45,25 +48,49 @@ def account_avatar_upload():
 
 
 @account_bp.get("/account/password")
+@login_required
 def account_password():
     return render_template("account/user_password.html")
 
 
+@account_bp.post("/account/password")
+@login_required
+def account_password2():
+    """获取参数"""
+    old_password = request.json.get("old_password")
+    new_password = request.json.get("new_password")
+    sure_password = request.json.get("sure_password")
+    user: UserORM = current_user
+    if not user.check_password(old_password):
+        return {"status": "fail", "message": "旧密码输入错误"}
+    if sure_password != new_password:
+        return {"status": "fail", "message": "两次新密码不一致"}
+    if old_password == new_password:
+        return {"status": "fail", "message": "新密码不能与旧密码一样"}
+    user.password = new_password
+    user.save_to_db()
+    return {"status": "success", "message": "修改密码成功"}
+
+
 @account_bp.get("/account/followed")
+@login_required
 def account_followed():
     return render_template("account/followed.html")
 
 
 @account_bp.get("/account/collection")
+@login_required
 def account_collection():
     return render_template("account/collection.html")
 
 
 @account_bp.get("/account/articles")
+@login_required
 def account_articles():
     return render_template("account/articles.html")
 
 
 @account_bp.get("/account/release")
+@login_required
 def account_release():
     return render_template("account/release.html")
