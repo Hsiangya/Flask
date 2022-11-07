@@ -1,0 +1,41 @@
+{% extends 'account/base.html' %}
+
+
+{% block profile_card %}
+    <div class="profile-card">
+        <span class="layui-breadcrumb" style="padding: 15px;display: block;">
+            <a href="/account">个人中心</a>
+            <a href="/account/followed">我的关注</a>
+        </span>
+        <div class="author-cards">
+            {% for user in paginate.items %}
+                <div class="author_card">
+                    <div class="card-header">
+                        <a href="/account/author/{{ user.id }}" target="_blank" class="author_pic">
+                            <img src="{{ user.avatar_url }}" alt="author_pic">
+                        </a>
+                        <a href="#" target="_blank" class="author_name">{{ user.username }}</a>
+                    </div>
+                    <div class="author_resume">{{ user.signature }}</div>
+                    <div class="author-card-info">
+                        <div class="writings"><span>总篇数：</span><b>{{ user.articles.count() }}</b></div>
+                        <div class="follows"><span>粉丝：</span><b>{{ user.followers.count() }}</b></div>
+{#                        <a href="javascript:;" class="focus" data-userid="{{ user.id }}">关注</a>#}
+                        <a href="javascript:;" class="focused" data-userid="{{ user.id }}">
+                            <span class="out">已关</span>
+                            <span class="over" style="display: none">取关</span>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="profile-pagination" style="text-align: center;">
+            <div id="test1"></div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer_script %}
+
+{% endblock %}

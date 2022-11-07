@@ -1,0 +1,32 @@
+{% extends 'account/base.html' %}
+
+{% block profile_card %}
+    <div class="profile-card">
+        <span class="layui-breadcrumb" style="padding: 15px;display: block;">
+          <a href="/account">个人中心</a>
+          <a href="/account/articles">发布的文章</a>
+        </span>
+        <ul class="profile-articles">
+            {% for article in paginate.items %}
+                <li>
+                    <a href="/article/{{ article.id }}">{{ article.title }}</a>
+                    {% if article.status==0 %}
+                        <em class="pass">通过</em>
+                    {% elif article.status==1 %}
+                        <em class="review">审核中</em>
+                    {% else %}
+                        <em class="nopass">未通过</em>
+                    {% endif %}
+                    <span>{{ article.create_at }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <div class="profile-pagination" style="text-align: center;">
+            <div id="test1"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_script %}
+
+{% endblock %}
