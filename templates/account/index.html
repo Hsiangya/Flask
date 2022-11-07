@@ -97,7 +97,15 @@
           }).then(function(res) {
             return res.json();
           }).then(function(ret) {
-            console.log(ret);
+            if (ret.status === 'status') {
+              layui.layer.msg(ret.message);
+              setTimeout(function() {
+                window.location.reload();
+              }, 1000);
+            } else {
+              layui.layer.msg(ret.message);
+            }
+            ;
           });
 
           return false;

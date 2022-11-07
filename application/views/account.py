@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from werkzeug.datastructures import FileStorage
 
 from application.common.utils import upload_file
-from application.models.user import UserORM, db
+from application.models.user import UserORM
 
 account_bp = Blueprint("account", __name__)
 
@@ -19,7 +19,10 @@ def account_info():
 @login_required
 def account_info2():
     """获取参数"""
-    current_user.nick_name = request.json.get("nick_name")
+    nick_name = request.json.get("nick_name")
+    if UserORM.query.filter(UserORM.nick_name == nick_name):
+        return {"status": "success", "message": "昵称已经存在"}
+    current_user.nick_name = nick_name
     current_user.signature = request.json.get("signature")
     current_user.gender = request.json.get("gender")
     current_user.birthday = request.json.get("birth_day")
