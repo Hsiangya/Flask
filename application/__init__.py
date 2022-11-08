@@ -114,6 +114,7 @@ def register_cli(app):
             # # print(user.gender)
             # user.username = 'hsiangya1234'
             # user.mobile = '13600331234'
+
             user.password = "xy159951"
             try:
                 user.save_to_db()

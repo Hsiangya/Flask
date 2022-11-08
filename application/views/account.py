@@ -80,7 +80,7 @@ def account_password2():
 def account_followed():
     """获取分页"""
     page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=4, type=int)
+    per_page = request.args.get("per_page", default=6, type=int)
     paginate = current_user.followed.paginate(
         page=page, per_page=per_page, error_out=False
     )

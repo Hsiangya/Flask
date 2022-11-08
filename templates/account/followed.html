@@ -31,7 +31,7 @@
             {% endfor %}
         </div>
         <div class="profile-pagination" style="text-align: center;">
-            <div id="test1"></div>
+            <div id="follow_page"></div>
         </div>
     </div>
 {% endblock %}
@@ -41,6 +41,42 @@
     <script>
       layui.use(function() {
         var $ = layui.jquery;
+        var laypage = layui.laypage;
+
+        // 获取链接字段
+        function getUrlParam(name) {
+          var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)'); //构造一个含有目标参数的正则表达式对象
+          var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+          if (r != null)
+            return unescape(r[2]);
+          return null; //返回参数值
+        }
+
+        function changeHref(url, arg, val) {
+          var pattern = arg + '=([^&]*)';
+          var replaceText = arg + '=' + val;
+          return url.match(pattern) ? url.replace(eval('/(' + arg + '=)([^&]*)/gi'),
+              replaceText) : (url.match('[\?]') ? url + '&' + replaceText : url + '?' +
+              replaceText);
+        }
+
+        //执行一个laypage实例
+        laypage.render({
+          elem: 'follow_page',//注意，这里的 test1 是 ID，不用加 # 号
+          count: {{paginate.total}}, //数据总数，从服务端得到
+          curr: {{paginate.page}},
+          first: '首页',
+          last: '尾页',
+          limit: 6,
+          prev: '上一页',
+          next: '下一页',
+          jump: function(obj) {
+
+            if (obj.curr !== parseInt(getUrlParam('page'))) {
+              window.location.href = changeHref(window.location.href, 'page', obj.curr);
+            }
+          },
+        });
 
         $('.focus').click(function() {
           // 点击关注后获取当前用户的id，以及动作
