@@ -14,13 +14,14 @@
                         <a href="/account/author/{{ user.id }}" target="_blank" class="author_pic">
                             <img src="{{ user.avatar_url }}" alt="author_pic">
                         </a>
-                        <a href="/account/author/{{ user.id }}" target="_blank" class="author_name">{{ user.nick_name }}</a>
+                        <a href="/account/author/{{ user.id }}" target="_blank"
+                           class="author_name">{{ user.nick_name }}</a>
                     </div>
                     <div class="author_resume">{{ user.signature }}</div>
                     <div class="author-card-info">
                         <div class="writings"><span>总篇数：</span><b>{{ user.articles.count() }}</b></div>
                         <div class="follows"><span>粉丝：</span><b>{{ user.followers.count() }}</b></div>
-                        <a href="javascript:;" class="focus" data-userid="{{ user.id }}">关注</a>
+                        {#                        <a href="javascript:;" class="focus" data-userid="{{ user.id }}">关注</a>#}
                         <a href="javascript:;" class="focused" data-userid="{{ user.id }}">
                             <span class="out">已关</span>
                             <span class="over" style="display: none">取关</span>
@@ -37,5 +38,68 @@
 
 
 {% block footer_script %}
+    <script>
+      layui.use(function() {
+        var $ = layui.jquery;
 
+        $('.focus').click(function() {
+          // 点击关注后获取当前用户的id，以及动作
+          let user_id = $(this).attr('data-userid');
+          let action = 'follow';
+          fetch('/article/followed_user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              'user_id': user_id,
+              'action': action,
+            }),
+          }).then(response => response.json()).then(res => {
+            if (res.status === 'success') {
+              layui.layer.msg(res.message);
+              setTimeout(function() {
+                location.reload();
+              }, 1000);
+            } else {
+              layui.layer.msg(res.message);
+            }
+          });
+        });
+
+        $('.focused').on({
+          mouseover: function() {
+            $(this).find('.over').show();
+            $(this).find('.out').hide();
+          },
+          mouseout: function() {
+            $(this).find('.over').hide();
+            $(this).find('.out').show();
+          },
+          click: function() {
+            let user_id = $(this).attr('data-userid');
+            let action = 'unfollow';
+            fetch('/article/followed_user', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                'user_id': user_id,
+                'action': action,
+              }),
+            }).then(response => response.json()).then(res => {
+              if (res.status === 'success') {
+                layui.layer.msg(res.message);
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                layui.layer.msg(res.message);
+              }
+            });
+          },
+        });
+      });
+    </script>
 {% endblock %}

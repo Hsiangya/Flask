@@ -102,7 +102,7 @@ def followed_user():
     """解析请求参数"""
     user_id = request.json.get("user_id")
     action = request.json.get("action")
-
+    print(user_id, action)
     """校验参数"""
     author: UserORM = UserORM.query.get(user_id)
     if not author:

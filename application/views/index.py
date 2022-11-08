@@ -98,9 +98,9 @@ def register_view2():
     if real_sms_code != sms_captcha:
         return {"status": "fail", "message": "短信验证码错误，请输入正确的验证码"}
     user = UserORM()
-    if UserORM.query.filter(UserORM.username == username):
+    if UserORM.query.filter(UserORM.username == username).first():
         return {"status": "fail", "message": "账号已存在，请使用其他账号"}
-    if UserORM.query.filter(UserORM.nick_name == username):
+    if UserORM.query.filter(UserORM.nick_name == username).first():
         random_number = random.randint(0, 99999)
         nick_name = username + "%06d" % random_number
     # if UserORM.query.filter(UserORM.mobile == phone):

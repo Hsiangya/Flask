@@ -1,6 +1,8 @@
 import os
 
+import pymysql
 from flask import Flask
+from sqlalchemy import exc
 
 from application.common.get_bilingual import get_news
 from application.common.get_life import get_life_news
@@ -91,3 +93,33 @@ def register_cli(app):
                 life_article.save_to_db()
             except Exception as e:
                 print("添加失败")
+
+    @app.cli.command()
+    def faker_user():
+        from faker import Faker
+
+        faker = Faker(locale="zh_CN")
+        import random
+
+        for i in range(1000):
+            faker_number = str(faker.phone_number())
+            # print(faker_number)
+            user = UserORM()
+            user.nick_name = faker.name()
+            # # print(user.nick_name)
+            user.username = faker_number
+            user.birth = faker.date_of_birth(tzinfo=None, minimum_age=0, maximum_age=35)
+            user.mobile = faker_number
+            user.gender = random.choice(["MAN", "WOMAN"])
+            # # print(user.gender)
+            # user.username = 'hsiangya1234'
+            # user.mobile = '13600331234'
+            user.password = "xy159951"
+            try:
+                user.save_to_db()
+            except pymysql.err.IntegrityError as e:
+                db.session.rollback()
+            except exc.IntegrityError as e:
+                db.session.rollback()
+            except Exception as e:
+                db.session.rollback()

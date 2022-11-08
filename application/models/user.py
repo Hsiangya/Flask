@@ -21,7 +21,7 @@ class UserORM(db.Model, UserMixin):
     __tablename__ = "info_user"
     id = db.Column(db.Integer, primary_key=True)  # 用户编号
     username = db.Column(db.String(32), unique=True, nullable=False)  # 用户账号
-    nick_name = db.Column(db.String(32), unique=True)  # 用户昵称
+    nick_name = db.Column(db.String(38), unique=True)  # 用户昵称
     password_hash = db.Column(db.String(128), nullable=False)  # 加密的密码
     mobile = db.Column(db.String(11), unique=True, nullable=False)  # 手机号
     email = db.Column(db.String(50))  # 用户邮箱

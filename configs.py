@@ -19,7 +19,7 @@ class DevelopmentConfig(BaseConfig):
     """开发配置"""
 
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI["testing"]
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     LOG_LEVEL = logging.DEBUG
 
 
