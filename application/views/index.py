@@ -27,7 +27,7 @@ def index():
     """获取前端需要显示的文章分类数据"""
     cid = request.args.get("cid", type=int, default=1)
     """获取前端需要的当前页数"""
-    print(cid)
+    # print(cid)
     page = request.args.get("page", type=int, default=1)
     """获取前端需要的每页数据条数"""
     per_page = request.args.get("per_page", type=int, default=10)
@@ -77,6 +77,7 @@ def register_view2():
     captcha_code_uuid = request.json.get("captcha_code_uuid")
     captcha_code = request.json.get("captcha_code")
     username = request.json.get("username")
+    nick_name = request.json.get("username")
     password = request.json.get("password")
     phone = request.json.get("phone")
     # print(type(phone))
@@ -97,12 +98,24 @@ def register_view2():
     if real_sms_code != sms_captcha:
         return {"status": "fail", "message": "短信验证码错误，请输入正确的验证码"}
     user = UserORM()
-    user.nick_name = username
+    if UserORM.query.filter(UserORM.username == username):
+        return {"status": "fail", "message": "账号已存在，请使用其他账号"}
+    if UserORM.query.filter(UserORM.nick_name == username):
+        random_number = random.randint(0, 99999)
+        nick_name = username + "%06d" % random_number
+    # if UserORM.query.filter(UserORM.mobile == phone):
+    #     return {"status": "fail", "message": "该手机号已注册"}
+    user.nick_name = nick_name
     user.username = username
     user.password = password
     user.mobile = phone
     user.save_to_db()
     return {"status": "success", "message": "注册成功，现在可以去登录了"}
+
+
+@index_bp.route("/user")
+def user_view():
+    return render_template("bbs/user.html")
 
 
 @index_bp.route("/sms_code", methods=["POST"])
@@ -111,6 +124,8 @@ def sms_code():
     captcha_code = request.json.get("captcha_code")
     captcha_code_uuid = request.json.get("captcha_code_uuid")
     phone = request.json.get("phone")
+    if UserORM.query.filter(UserORM.mobile == phone).first():
+        return {"status": "fail", "message": "该手机号已注册"}
     """ 校验验证码"""
     real_captcha_code = redis.strict_redis.get("captcha_code_uuid_" + captcha_code_uuid)
     # 如果没有验证码或验证码不正确

@@ -17,7 +17,8 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <input name="username" type="text" lay-verify="required|username" placeholder="请输入账户：" value="" hover class="layui-input"
+        <input name="username" type="text" lay-verify="required|username" placeholder="请输入账户：" value="" hover
+               class="layui-input"
                autocomplete="off"/>
     </div>
     <div class="layui-form-item">
@@ -62,6 +63,7 @@
     let $ = layui.jquery;
     let captchaPath = '/get_captcha'; /*图片验证的访问地址*/
     let captcha_code_uuid = '';  /*定义图片验证码的 uuid */
+    // 校验用户账号不能含有中文校验(等待添加)
 
     // 点击图片更新验证码
     $('#captchaImage').click(function() {
@@ -143,6 +145,7 @@
 
     // 监听注册按钮事件
     form.on('submit(register)', async function(data) {
+      var field = data.field;
       const result = await register(data.field);
       if (result.status === 'success') {
         layer.msg('注册成功 2s 之后跳转到登录页面');

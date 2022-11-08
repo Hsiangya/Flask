@@ -22,7 +22,7 @@
                         <div class="card mb-2 article" >
                             <div class="row g-0">
                                 <div class="col-md-2">
-                                    <img src="{{ article.index_image_url or '/static/images/Dora_article.png' }}"
+                                    <img src="{{ article.index_image_url  }}"
                                          class="img-fluid rounded-start"
                                          alt="...">
                                 </div>
@@ -31,7 +31,7 @@
                                         <a class="card-title" href="/article/{{ article.id }}">{{ article.title }}</a>
                                         <a class="card-text" href="/article/{{ article.id }}">{{ article.digest }}</a>
                                         <p class="card-text small">
-                                            <a href="/author" class="text-muted">{{ article.user.username }}</a>
+                                            <a href="/user" class="text-muted">{{ article.user.nick_name }}</a>
                                             <span class="text-muted">・{{ article.create_at }}</span>
                                         </p>
                                     </div>

@@ -21,7 +21,7 @@ def account_info2():
     """获取参数"""
     nick_name = request.json.get("nick_name")
     if UserORM.query.filter(UserORM.nick_name == nick_name):
-        return {"status": "success", "message": "昵称已经存在"}
+        return {"status": "success", "message": "昵称已经存在,请修改昵称"}
     current_user.nick_name = nick_name
     current_user.signature = request.json.get("signature")
     current_user.gender = request.json.get("gender")
@@ -78,7 +78,13 @@ def account_password2():
 @account_bp.get("/account/followed")
 @login_required
 def account_followed():
-    return render_template("account/followed.html")
+    """获取分页"""
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=4, type=int)
+    paginate = current_user.followed.paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    return render_template("account/followed.html", paginate=paginate)
 
 
 @account_bp.get("/account/collection")
