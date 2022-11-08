@@ -34,7 +34,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">上传图像：</label>
                 <div class="layui-input-block">
-                    <button type="button" class="layui-btn" id="test1">
+                    <button type="button" class="layui-btn" id="upload_picture">
                         <i class="layui-icon">&#xe67c;</i>上传图片
                     </button>
                     <input hidden type="text" name="image_url" class="input_file">
@@ -47,7 +47,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即修改</button>
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -56,5 +56,82 @@
 {% endblock %}
 
 {% block footer_script %}
+    <script src="tinymce/tinymce.min.js"></script>
+    <script>
+      layui.use(['form', 'upload'], function() {
+        var form = layui.form;
+        var upload = layui.upload;
+        var layer = layui.layer;
+        var $ = layui.jquery;
 
+        // 初始化富文本编辑器
+        tinymce.init({
+          selector: '#rich_content',
+          setup: function(editor) {
+            editor.on('change', function() {
+              editor.save();
+            });
+          },
+          language: 'zh_CN', //调用放在langs文件夹内的语言包
+          //工具栏上面的补丁按钮
+          plugins: [
+            'advlist',
+            'autolink',
+            'link',
+            'image',
+            'lists',
+            'charmap',
+            'preview',
+            'anchor',
+            'pagebreak',
+            'searchreplace',
+            'wordcount',
+            'visualblocks',
+            'visualchars',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'nonbreaking',
+            'save',
+            'table',
+            'directionality',
+            'template',
+            'codesample',
+          ],
+          //工具栏的补丁按钮
+          toolbar: 'insertfile undo redo | \
+                     styleselect | \
+                     bold italic | \
+                     alignleft aligncenter alignright alignjustify | \
+                     bullist numlist outdent indent | \
+                     link image | \
+                     print preview media fullpage | \
+                     forecolor backcolor emoticons |\
+                     codesample fontsizeselect fullscreen |\
+                     imageupload',
+          //字体大小
+          fontsize_formats: '10pt 12pt 14pt 18pt 24pt 36pt',
+          //按 tab 不换行
+          nonbreaking_force_tab: true,
+          imageupload_url: '/user/submit-image',
+        });
+
+        //提交文章图片
+        upload.render({
+          elem: '#upload_picture',//绑定元素
+          url: '/upload/article_avatar', //上传接口
+          done: function(res) {
+            $('[name="image_url"]').val(res.article_avatar_url);
+            layer.msg(res.message);
+            //上传完毕回调
+          },
+          error: function() {
+            //请求异常回调
+            layer.msg('图片上传失败');
+          },
+        });
+
+      });
+    </script>
 {% endblock %}

@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from werkzeug.datastructures import FileStorage
 
 from application.common.utils import upload_file
-from application.models.user import UserORM
+from application.models import CategoryORM, UserORM
 
 account_bp = Blueprint("account", __name__)
 
@@ -114,4 +114,18 @@ def account_articles():
 @account_bp.get("/account/release")
 @login_required
 def account_release():
-    return render_template("account/release.html")
+    cate_list = CategoryORM.query.all()
+    return render_template("account/release.html", cate_list=cate_list)
+
+
+@account_bp.post("/upload/article_avatar")
+def article_avatar():
+    """获取文件数据"""
+    file: FileStorage = request.files.get("file")
+    """保存文件并返回url"""
+    article_avatar_url = upload_file(file)
+    return {
+        "status": "success",
+        "message": "图片上传成功",
+        "article_avatar_url": article_avatar_url,
+    }

@@ -9,7 +9,7 @@
         </span>
         <ul class="profile-articles">
             {% for article in paginate.items %}
-                <li><a href="article/{{ article.id }}">{{ article.title }}</a>
+                <li><a href="/article/{{ article.id }}">{{ article.title }}</a>
                     <em class="review">
                         {% if article.status==0 %}
                             <em class="pass">通过</em>
