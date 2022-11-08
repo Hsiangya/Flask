@@ -20,7 +20,9 @@ def account_info():
 def account_info2():
     """获取参数"""
     nick_name = request.json.get("nick_name")
-    if UserORM.query.filter(UserORM.nick_name == nick_name):
+    if UserORM.query.filter(
+        UserORM.nick_name == nick_name, UserORM.id != current_user.id
+    ).first():
         return {"status": "success", "message": "昵称已经存在,请修改昵称"}
     current_user.nick_name = nick_name
     current_user.signature = request.json.get("signature")
@@ -90,13 +92,23 @@ def account_followed():
 @account_bp.get("/account/collection")
 @login_required
 def account_collection():
-    return render_template("account/collection.html")
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    paginate = current_user.collection_articles.paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    return render_template("account/collection.html", paginate=paginate)
 
 
 @account_bp.get("/account/articles")
 @login_required
 def account_articles():
-    return render_template("account/articles.html")
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=10, type=int)
+    paginate = current_user.articles.paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    return render_template("account/articles.html", paginate=paginate)
 
 
 @account_bp.get("/account/release")
