@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask
 from flask.views import MethodView
 
-admin_api = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
+admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
 
 
 def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
@@ -49,5 +49,5 @@ class UserAPI(MethodView):
 
 
 def register_api(app: Flask):
-    register_api_func(admin_api, UserAPI, "user_api", "/user/", pk="user_id")
-    app.register_blueprint(admin_api)
+    register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
+    app.register_blueprint(admin_api_bp)

@@ -11,7 +11,7 @@ from application.extensions import db, login_manager, migrate, redis
 from application.models import ArticleORM, UserORM
 from application.views import (
     account_bp,
-    admin_api,
+    admin_api_bp,
     admin_bp,
     article_bp,
     index_bp,
@@ -53,7 +53,6 @@ def register_blueprint(app: Flask):
     app.register_blueprint(article_bp)
     app.register_blueprint(account_bp)
     app.register_blueprint(admin_bp)
-    app.register_blueprint(admin_api)
     register_api(app)
 
 
