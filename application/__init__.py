@@ -9,7 +9,14 @@ from application.common.get_life import get_life_news
 from application.common.utils import setup_log
 from application.extensions import db, login_manager, migrate, redis
 from application.models import ArticleORM, UserORM
-from application.views import account_bp, admin_bp, article_bp, index_bp
+from application.views import (
+    account_bp,
+    admin_api,
+    admin_bp,
+    article_bp,
+    index_bp,
+    register_api,
+)
 from configs import config
 
 
@@ -46,6 +53,8 @@ def register_blueprint(app: Flask):
     app.register_blueprint(article_bp)
     app.register_blueprint(account_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(admin_api)
+    register_api(app)
 
 
 def register_cli(app):
