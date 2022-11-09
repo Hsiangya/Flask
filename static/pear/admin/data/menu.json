@@ -1,0 +1,85 @@
+[
+  {
+    "id": 1,
+    "title": "工作空间",
+    "icon": "layui-icon layui-icon-console",
+    "type": 0,
+    "href": "",
+    "children": [
+      {
+        "id": 10,
+        "title": "控制后台",
+        "icon": "layui-icon layui-icon-console",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/workspace_admin"
+      }
+    ]
+  },
+  {
+    "id": "system",
+    "title": "系统管理",
+    "icon": "layui-icon layui-icon-set-fill",
+    "type": 0,
+    "href": "",
+    "children": [
+      {
+        "id": 601,
+        "title": "用户管理",
+        "icon": "layui-icon layui-icon-face-smile",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/system_user"
+      },
+      {
+        "id": 602,
+        "title": "角色管理",
+        "icon": "layui-icon layui-icon-face-cry",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/system_role"
+      },
+      {
+        "id": 603,
+        "title": "权限管理",
+        "icon": "layui-icon layui-icon-face-cry",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/system_power"
+      },
+      {
+        "id": 604,
+        "title": "部门管理",
+        "icon": "layui-icon layui-icon-face-cry",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/system_department"
+      }
+    ]
+  },
+  {
+    "id": "echarts",
+    "title": "数据图表",
+    "icon": "layui-icon layui-icon-chart",
+    "type": 0,
+    "href": "",
+    "children": [
+      {
+        "id": 12121,
+        "title": "折线图",
+        "icon": "layui-icon layui-icon-face-smile",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/echarts_line"
+      },
+      {
+        "id": 121212,
+        "title": "柱状图",
+        "icon": "layui-icon layui-icon-face-smile",
+        "type": 1,
+        "openType": "_iframe",
+        "href": "/admin/echarts_column"
+      }
+    ]
+  }
+]

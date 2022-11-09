@@ -32,6 +32,9 @@
             <div class="login-btn">
                 {#                <a href="javascript:;" class="login_btn">登录</a> /#}
                 {#                <a href="javascript:;" class="register_btn">注册</a>#}
+                {% if current_user.is_admin %}
+                    <a href="/admin">后台管理&nbsp;&nbsp;</a>
+                {% endif %}
                 <a href="/logout">退出</a>
             </div>
         </div>
@@ -54,7 +57,8 @@
                         <!--个人信息操作列表-->
                         <ul class="profile-option-list p-0">
                             <li>
-                                <a class="active" href="/account/info">基本资料<i class="layui-icon layui-icon-right"></i></a>
+                                <a class="active" href="/account/info">基本资料<i
+                                        class="layui-icon layui-icon-right"></i></a>
                             </li>
                             <li><a href="/account/avatar">修改头像<i class="layui-icon layui-icon-right"></i></a></li>
                             <li><a href="/account/password">修改密码<i class="layui-icon layui-icon-right"></i></a></li>
