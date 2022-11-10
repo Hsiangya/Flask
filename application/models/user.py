@@ -61,15 +61,15 @@ class UserORM(db.Model, UserMixin):
         """ "获取用户数据"""
         return {
             "id": self.id,
+            "nick_name": self.nick_name,
             "username": self.username,
             "mobile": self.mobile,
             "email": self.email,
             "avatar_url": self.avatar_url,
             "birthday": self.birthday,
-            "is_admin": self.is_admin,
             "signature": self.signature,
             "gender": self.gender,
-            "create_at": self.create_at.strftime("%Y-%M-%d"),
+            "create_at": self.create_at.strftime("%Y-%M-%D"),
             "update_at": self.update_at,
             "is_delete": self.is_delete,
         }

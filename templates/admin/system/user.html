@@ -66,29 +66,14 @@
     </button>
 </script>
 
-<script type="text/html" id="user-enable">
-    {{ '<input type="checkbox" name="enable" value="{{ d.id }}" lay-skin="switch" lay-text="启用|禁用"
-            lay-filter="user-enable" {{ d.enable== true ? "checked" : "" }} />'|safe }}
-</script>
-
 <script type="text/html" id="user-sex">
-    {{ '{{#if (d.sex == 1) { }}'|safe }}
+    {{ '{{#if (d.gender == "MAN") { }}'|safe }}
     <span>男</span>
-    {{ '{{# }else if(d.sex == 2){ }}'|safe }}
+    {{ '{{# }else if(d.gender == "WOMAN"){ }}'|safe }}
     <span>女</span>
+    {{ '{{# }else if(d.gender == "SECRET"){ }}' | safe }}
+    <span>保密</span>
     {{ '{{# } }}'|safe }}
-</script>
-
-<script type="text/html" id="user-login">
-    {{ '{{#if (d.login == 0) { }}'|safe }}
-    <span>在线</span>
-    {{ '{{# }else if(d.sex == 1){ }}'|safe }}
-    <span>离线</span>
-    {{ '{{# } }}'|safe }}
-</script>
-
-<script type="text/html" id="user-createTime">
-    {{ "{{ layui.util.toDateString(d.createTime, 'yyyy-MM-dd') }}"|safe }}
 </script>
 
 <script src="../static/pear/component/layui/layui.js"></script>
@@ -108,45 +93,72 @@
           type: 'checkbox',
         },
         {
-          title: '账号',
-          field: 'username',
+          title: 'ID',
+          field: 'ID',
           align: 'center',
-          width: 100,
+          hide: true,
         },
         {
-          title: '姓名',
-          field: 'realName',
+          title: '昵称',
+          field: 'nick_name',
+          align: 'center',
+        },
+        {
+          title: '账号',
+          field: 'username',
           align: 'center',
         },
         {
           title: '性别',
-          field: 'sex',
+          field: 'gender',
           align: 'center',
-          width: 80,
-          templet: '#user-sex',
+          templet:'#user-sex'
         },
         {
-          title: '电话',
-          field: 'phone',
+          title: '手机号',
+          field: 'mobile',
           align: 'center',
         },
         {
-          title: '启用',
-          field: 'enable',
+          title: '邮箱',
+          field: 'email',
           align: 'center',
-          templet: '#user-enable',
+          hide: true,
         },
         {
-          title: '登录',
-          field: 'login',
+          title: '头像',
+          field: 'avatar_url',
           align: 'center',
-          templet: '#user-login',
         },
         {
-          title: '注册',
-          field: 'createTime',
+          title: '生日',
+          field: 'birthday',
           align: 'center',
-          templet: '#user-createTime',
+          hide: true,
+        },
+        {
+          title: '个性签名',
+          field: 'signature',
+          align: 'center',
+          hide: true,
+        },
+
+        {
+          title: '创建时间',
+          field: 'create_at',
+          align: 'center',
+        },
+        {
+          title: '更新时间',
+          field: 'update_at',
+          align: 'center',
+          hide: true,
+        },
+        {
+          title: '是否注销',
+          field: 'is_delete',
+          align: 'center',
+          hide: true,
         },
         {
           title: '操作',
@@ -159,7 +171,7 @@
 
     table.render({
       elem: '#user-table',
-      url: '../../admin/data/user.json',
+      url: '/api/v1/admin/user/',
       page: true,
       cols: cols,
       skin: 'line',
