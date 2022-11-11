@@ -100,9 +100,12 @@ def register_view2():
     user = UserORM()
     if UserORM.query.filter(UserORM.username == username).first():
         return {"status": "fail", "message": "账号已存在，请使用其他账号"}
-    if UserORM.query.filter(UserORM.nick_name == username).first():
+    while UserORM.query.filter(UserORM.nick_name == nick_name).first():
         random_number = random.randint(0, 99999)
-        nick_name = username + "%06d" % random_number
+        if len(nick_name) >= 38:
+            nick_name = nick_name[:29]
+        nick_name = nick_name + "%06d" % random_number
+
     # if UserORM.query.filter(UserORM.mobile == phone):
     #     return {"status": "fail", "message": "该手机号已注册"}
     user.nick_name = nick_name

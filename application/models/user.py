@@ -31,7 +31,7 @@ class UserORM(db.Model, UserMixin):
     birthday = db.Column(db.DateTime, default=datetime.now)  # 最后一次登录时间
     is_admin = db.Column(db.Boolean, default=False)  # 是否管理员
     signature = db.Column(db.String(512), default="用户很懒，什么都没留下")  # 用户签名
-    gender = db.Column(db.Enum("MAN", "WOMAN", "SECRET"), default="MAN")  # 男  # 女
+    gender = db.Column(db.Enum("MAN", "WOMAN", "SECRET"), default="SECRET")  # 男  # 女
 
     create_at = db.Column(db.DateTime, default=datetime.now)  # 记录的创建时间
     update_at = db.Column(
@@ -69,8 +69,8 @@ class UserORM(db.Model, UserMixin):
             "birthday": self.birthday,
             "signature": self.signature,
             "gender": self.gender,
-            "create_at": self.create_at.strftime("%Y-%M-%D"),
-            "update_at": self.update_at,
+            "create_at": self.create_at.strftime("%Y-%m-%d"),
+            "update_at": self.update_at.strftime("%Y-%m-%d %H:%S:%M"),
             "is_delete": self.is_delete,
         }
 

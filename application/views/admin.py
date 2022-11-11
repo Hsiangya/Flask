@@ -3,7 +3,7 @@ from flask import Blueprint, render_template
 admin_bp = Blueprint("admin", __name__)
 
 
-@admin_bp.route("/admin")
+@admin_bp.route("/admin/")
 def admin_index():
     return render_template("admin/index.html")
 
@@ -15,12 +15,17 @@ def admin_dashboard():
 
 @admin_bp.route("/admin/workspace_admin")
 def workspace_admin():
-    return render_template("admin/system/space.html")
+    return render_template("admin/worksapce/space.html")
 
 
 @admin_bp.route("/admin/system_user")
 def system_user():
     return render_template("admin/system/user.html")
+
+
+@admin_bp.route("/admin/system_user/add")
+def add_user():
+    return render_template("admin/system/add_user.html")
 
 
 @admin_bp.route("/admin/system_role")

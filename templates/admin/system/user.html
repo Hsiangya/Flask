@@ -71,11 +71,17 @@
     <span>男</span>
     {{ '{{# }else if(d.gender == "WOMAN"){ }}'|safe }}
     <span>女</span>
-    {{ '{{# }else if(d.gender == "SECRET"){ }}' | safe }}
+    {{ '{{# }else if(d.gender == "SECRET"){ }}' |safe }}
     <span>保密</span>
     {{ '{{# } }}'|safe }}
 </script>
 
+<script type="text/html" id="avatar">
+    {{ '{{# if(d.avatar_url){ }}' |safe }}
+    {{ '<span><img src=" {{# d.avatar_url}}" alt=""></div>' |safe }}
+    {#    <span>保密</span>#}
+    {{ '{{# } }}' |safe }}
+</script>
 <script src="../static/pear/component/layui/layui.js"></script>
 <script src="../static/pear/component/pear/pear.js"></script>
 <script>
@@ -112,7 +118,7 @@
           title: '性别',
           field: 'gender',
           align: 'center',
-          templet:'#user-sex'
+          templet: '#user-sex',
         },
         {
           title: '手机号',
@@ -129,6 +135,7 @@
           title: '头像',
           field: 'avatar_url',
           align: 'center',
+          templet: '#avatar',
         },
         {
           title: '生日',
@@ -219,7 +226,7 @@
         title: '新增',
         shade: 0.1,
         area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
-        content: MODULE_PATH + 'add.html',
+        content: '/admin/system_user/add',
       });
     };
 
