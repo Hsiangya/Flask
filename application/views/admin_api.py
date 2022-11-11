@@ -102,8 +102,11 @@ class UserAPI(MethodView):
         return {"status": "success", "message": "用户添加成功"}
 
     def delete(self, user_id):
-        # 删除一个用户
-        pass
+        user = UserORM.query.get(user_id)
+        if not user:
+            return {"status": "fail", "message": "该用户不存在或已被删除"}
+        user.delete_from_db()
+        return {"status": "success", "message": "用户删除成功"}
 
     def put(self, user_id):
         # update a single user
