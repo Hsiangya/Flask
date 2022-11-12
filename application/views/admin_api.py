@@ -43,7 +43,8 @@ def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
 
 
 class UserAPI(MethodView):
-    def get(self, user_id):
+    @staticmethod
+    def get(user_id):
         if user_id is None:
             page = request.args.get("page", default=1, type=int)
             per_page = request.args.get("limit", default=10, type=int)
@@ -64,41 +65,31 @@ class UserAPI(MethodView):
 
     def post(self):
         # 创建一个新用户
-        username = request.json.get("username")
-        nick_name = request.json.get("nick_name") or username
-        password = request.json.get("password")
-        gender = request.json.get("gender", "SECRET")
-        mobile = request.json.get("phone")
-        email = request.json.get("email")
-        avatar_url = request.json.get("avatar_url")
-        birthday = request.json.get("birthday")
-        signature = request.json.get("signature")
-
+        (
+            avatar_url,
+            birthday,
+            email,
+            gender,
+            mobile,
+            nick_name,
+            password,
+            signature,
+            username,
+        ) = self.request_info()
         """判断数据是否已存在"""
-        """1.判断账号是否已经存在"""
-        if UserORM.query.filter(UserORM.username == username).first():
-            return {"status": "fail", "message": "该账号已存在"}
-        """2.判断昵称是否已经被占用，若占用末尾复制随机数"""
-        while UserORM.query.filter(UserORM.nick_name == nick_name).first():
-            random_number = random.randint(0, 99999)
-            if len(nick_name) >= 38:
-                nick_name = nick_name[:29]
-            nick_name = nick_name + "%06d" % random_number
-        """3.判断手机号是否已存在"""
-        if UserORM.query.filter(UserORM.mobile == mobile).first():
-            return {"status": "fail", "message": "该手机号已存在"}
-
+        self.query_rep(username, nick_name, mobile)
         user = UserORM()
-        user.username = username
-        user.nick_name = nick_name
-        user.password = password
-        user.gender = gender
-        user.mobile = mobile
-        user.email = email
-        user.avatar_url = avatar_url
-        user.birthday = birthday
-        user.signature = signature
-        user.save_to_db()
+        user.save_data(
+            username,
+            nick_name,
+            password,
+            gender,
+            mobile,
+            email,
+            avatar_url,
+            birthday,
+            signature,
+        )
         return {"status": "success", "message": "用户添加成功"}
 
     def delete(self, user_id):
@@ -110,7 +101,71 @@ class UserAPI(MethodView):
 
     def put(self, user_id):
         # update a single user
-        pass
+        if not user_id:
+            return {"status": "fail", "message": "该用户不存在或已被删除"}
+        (
+            avatar_url,
+            birthday,
+            email,
+            gender,
+            mobile,
+            nick_name,
+            password,
+            signature,
+            username,
+        ) = self.request_info()
+
+        """判断数据是否已存在"""
+        self.query_rep(username, nick_name, mobile)
+
+        user = UserORM.query.get(user_id)
+        user.save_data(
+            username,
+            nick_name,
+            password,
+            gender,
+            mobile,
+            email,
+            avatar_url,
+            birthday,
+            signature,
+        )
+        return {"status": "success", "message": "用户信息修改成功"}
+
+    @staticmethod
+    def query_rep(username, nick_name, mobile):
+        """1.判断账号是否已经存在"""
+        if UserORM.query.filter(UserORM.username == username).first():
+            return {"status": "fail", "message": "该账号已存在"}
+        """2.判断昵称是否已经被占用，若占用末尾复制随机数"""
+        if UserORM.query.filter(UserORM.nick_name == nick_name).first():
+            return {"status": "fail", "message": "该昵称已存在"}
+        """3.判断手机号是否已存在"""
+        if UserORM.query.filter(UserORM.mobile == mobile).first():
+            return {"status": "fail", "message": "该手机号已存在"}
+
+    @staticmethod
+    def request_info():
+        username = request.json.get("username")
+        nick_name = request.json.get("nick_name", username)
+        password = request.json.get("password")
+        gender = request.json.get("gender", "SECRET")
+        mobile = request.json.get("phone")
+        email = request.json.get("email")
+        avatar_url = request.json.get("avatar_url")
+        birthday = request.json.get("birthday")
+        signature = request.json.get("signature")
+        return (
+            avatar_url,
+            birthday,
+            email,
+            gender,
+            mobile,
+            nick_name,
+            password,
+            signature,
+            username,
+        )
 
 
 def register_api(app: Flask):

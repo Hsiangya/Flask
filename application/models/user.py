@@ -100,3 +100,26 @@ class UserORM(db.Model, UserMixin):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+
+    def save_data(
+        self,
+        username,
+        nick_name,
+        password,
+        gender,
+        mobile,
+        email,
+        avatar_url,
+        birthday,
+        signature,
+    ):
+        self.username = username
+        self.nick_name = nick_name
+        self.password = password
+        self.gender = gender
+        self.mobile = mobile
+        self.email = email
+        self.avatar_url = avatar_url
+        self.birthday = birthday
+        self.signature = signature
+        self.save_to_db()

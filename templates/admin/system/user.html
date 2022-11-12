@@ -91,8 +91,6 @@
     let $ = layui.jquery;
     let common = layui.common;
 
-    let MODULE_PATH = '/api/v1/admin/user/';
-
     let cols = [
       [
         {
@@ -226,7 +224,7 @@
         title: '新增',
         shade: 0.1,
         area: [common.isModile() ? '100%' : '500px', common.isModile() ? '100%' : '400px'],
-        content: MODULE_PATH + 'add',
+        content: '/admin/system_user/add',
       });
     };
 
@@ -236,7 +234,7 @@
         title: '修改',
         shade: 0.1,
         area: ['500px', '400px'],
-        content: MODULE_PATH + 'edit.html',
+        content: '/admin/system_user/edit/' + obj.data['id'],
       });
     };
 
@@ -248,7 +246,7 @@
         layer.close(index);
         let loading = layer.load();
         $.ajax({
-          url: MODULE_PATH + obj.data['id'],
+          url: '/api/v1/admin/user/' + obj.data['id'],
           dataType: 'json',
           type: 'delete',
           success: function(result) {
@@ -271,6 +269,7 @@
       });
     };
 
+    // 待修改
     window.batchRemove = function(obj) {
 
       var checkIds = common.checkField(obj, 'id');
@@ -290,7 +289,7 @@
         layer.close(index);
         let loading = layer.load();
         $.ajax({
-          url: '/api/v1/admin/user/' + checkIds,
+          url: '/api/v1/admin/user/' + ids,
           dataType: 'json',
           type: 'delete',
           success: function(result) {
