@@ -60,8 +60,9 @@ class UserAPI(MethodView):
                 "data": [user.json() for user in paginate.items],
             }
         else:
-            # 显示一个用户
-            pass
+            """请求用户id"""
+            user = UserORM.query.get(user_id)
+            return {"code": 0, "msg": "请求成功", "data": user.json()}
 
     def post(self):
         # 创建一个新用户

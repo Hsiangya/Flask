@@ -173,7 +173,7 @@
         },
       ],
     ];
-
+    // 渲染表格
     table.render({
       elem: '#user-table',
       url: '/api/v1/admin/user/',
@@ -234,7 +234,7 @@
         title: '修改',
         shade: 0.1,
         area: ['500px', '400px'],
-        content: '/admin/system_user/edit/' + obj.data['id'],
+        content: '/api/v1/admin/user/' + obj.data['id'],
       });
     };
 

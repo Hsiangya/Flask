@@ -30,12 +30,17 @@ def add_user():
     return render_template("admin/system/add_user.html")
 
 
-@admin_bp.route("/admin/system_user/edit/<int:user_id>")
-def edit_user(user_id):
-    user = UserORM.query.get(user_id)
-    if not user:
-        return {"status": "fail", "message": "该用户不存在或已被删除"}
+@admin_bp.route("/admin/system_user/edit")
+def edit_user():
     return render_template("admin/system/edit_user.html")
+
+
+# @admin_bp.route("/admin/system_user/edit/<int:user_id>")
+# def edit_user(user_id):
+#     user = UserORM.query.get(user_id)
+#     if not user:
+#         return {"status": "fail", "message": "该用户不存在或已被删除"}
+#     return render_template("admin/system/edit_user.html")
 
 
 @admin_bp.route("/admin/system_role")
