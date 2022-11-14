@@ -175,7 +175,7 @@
         layer.close(index);
         let loading = layer.load();
         fetch(api_path + obj.data.id, {
-          method: 'PUT',
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -236,7 +236,6 @@
     });
 
     form.on('submit(edit_form-submit)', function(data) {
-      console.log(data.field);
       fetch(api_path + data.field.id, {
         method: 'PUT',
         headers: {

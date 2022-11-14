@@ -8,7 +8,7 @@ from application.models import CategoryORM, UserORM
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
 
 
-def get_API(pk, orm):
+def get_api(pk, orm):
     """主键与orm"""
     if pk is None:
         page = request.args.get("page", default=1, type=int)
@@ -65,7 +65,7 @@ def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
 
 class UserAPI(MethodView):
     def get(self, user_id):
-        return get_API(user_id, UserORM)
+        return get_api(user_id, UserORM)
 
     def post(self):
         # 创建一个新用户
@@ -176,15 +176,26 @@ class UserAPI(MethodView):
 
 class CategoryAPI(MethodView):
     def get(self, category_id):
-        return get_API(category_id, CategoryORM)
+        return get_api(category_id, CategoryORM)
 
     def post(self):
-        # 创建一个新用户
-        pass
+        category = request.json.get("category")
+        """判断数据是否已存在"""
+        category_exists: CategoryORM = CategoryORM.query.get(category)
+        if category_exists:
+            return {"status": "fail", "message": "分类已存在"}
+        category_add = CategoryORM()
+        category_add.name = category
+        category_add.save_to_db()
+        return {"status": "success", "message": "分类添加成功"}
 
-    def delete(self, user_id):
-        # 删除一个用户
-        pass
+    def delete(self, category_id):
+        category = CategoryORM.query.filter(CategoryORM.id == category_id).first()
+        print(category.id)
+        if not category:
+            return {"status": "fail", "message": "该分类不存在或已被删除"}
+        category.delete_from_db()
+        return {"status": "success", "message": "分类删除成功"}
 
     def put(self, user_id):
         # update a single user
