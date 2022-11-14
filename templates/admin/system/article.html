@@ -47,13 +47,8 @@
         <table id="article-table" lay-filter="article-table"></table>
     </div>
 </div>
-工具栏模板：
 <script type="text/html" id="article-toolbar">
     <div class="layui-btn-container">
-        <button class="pear-btn pear-btn-primary pear-btn-xs" lay-event="add">
-            <i class="layui-icon layui-icon-add-1"></i>
-            新增
-        </button>
         <button class="pear-btn pear-btn-danger pear-btn-xs" lay-event="batchRemove">
             <i class="layui-icon layui-icon-delete"></i>
             删除
@@ -70,7 +65,7 @@
   layui.use('table', function() {
     var table = layui.table;
 
-    //第一个实例
+    //渲染表格
     table.render({
       elem: '#article-table'
       , url: '/api/v1/admin/article/' //数据接口
@@ -97,7 +92,101 @@
           , {title: '操作', width: 200, templet: '#article-toolEvent'},
         ]],
     });
+
+    //触发批量删除事件
+    table.on('toolbar(article-table)', function(obj) {
+      if (obj.event === 'batchRemove') {
+        window.batchRemove(obj);
+      }
+    });
+
+    table.on('tool(article-table)', function(obj) {
+      var data = obj.data; //获得当前行数据
+      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+      var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+      if (layEvent === 'edit') {
+        window.edit(obj);
+      } else if (layEvent === 'del') { //删除
+        window.remove(obj);
+      }
+    });
+
+    //待修改
+    window.batchRemove = function(obj) {
+      var checkIds = common.checkField(obj, 'id');
+      console.log(obj);
+      if (checkIds === '') {
+        layer.msg('未选中数据', {
+          icon: 3,
+          time: 1000,
+        });
+        return false;
+      }
+      layer.confirm('确定要删除这些用户', {
+        icon: 3,
+        title: '提示',
+      }, function(index) {
+        layer.close(index);
+        let loading = layer.load();
+        $.ajax({
+          url: '/api/v1/admin/article/' + ids,
+          dataType: 'json',
+          type: 'delete',
+          success: function(result) {
+            layer.close(loading);
+            if (result.status === 'success') {
+              layer.msg(result.message, {
+                icon: 1,
+                time: 1000,
+              }, function() {
+                table.reload('user-table');
+              });
+            } else {
+              layer.msg(result.message, {
+                icon: 2,
+                time: 1000,
+              });
+            }
+          },
+        });
+      });
+    };
+
+    // 删除一条数据
+    window.remove = function(obj) {
+      layer.confirm('确定删除吗？', {icon: 3, title: '提示'}, function(index) {
+        obj.del(); // 删除对应行（tr）的 DOM 结构，并更新缓存
+        layer.close(index);
+        let loading = layer.load();
+        let id = obj.data.id;
+        fetch(' /api/v1/admin/article/' + id, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(obj.data.id),
+        }).then(response => response.json()).then(res => {
+          layer.close(loading);
+          if (res.status === 'success') {
+            layer.msg(res.message, {
+              icon: 1,
+              time: 1000,
+            }, function() {
+              obj.del();
+            });
+          } else {
+            layer.msg(result.message, {
+              icon: 2,
+              time: 1000,
+            });
+          }
+        });
+      });
+    };
   });
+
+
 </script>
 
 </body>

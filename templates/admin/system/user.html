@@ -208,7 +208,6 @@
 
     // 待修改
     window.batchRemove = function(obj) {
-
       var checkIds = common.checkField(obj, 'id');
       console.log(obj);
       if (checkIds === '') {
@@ -218,7 +217,6 @@
         });
         return false;
       }
-
       layer.confirm('确定要删除这些用户', {
         icon: 3,
         title: '提示',

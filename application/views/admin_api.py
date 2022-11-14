@@ -8,9 +8,9 @@ from application.models import ArticleORM, CategoryORM, UserORM
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
 
 
-def get_api(pk, orm):
+def get_api(id, orm):
     """主键与orm"""
-    if pk is None:
+    if id is None:
         page = request.args.get("page", default=1, type=int)
         per_page = request.args.get("limit", default=10, type=int)
         filters = []
@@ -25,21 +25,19 @@ def get_api(pk, orm):
         }
     else:
         """请求用户id"""
-        data = orm.query.get(pk)
+        data = orm.query.get(id)
         return {"code": 0, "msg": "请求成功", "data": data.json()}
 
 
+# def delete_api(id, orm):
+#     orm_object = orm.query.filter(orm.id == id).first()
+#     if not orm_object:
+#         return {"status": "fail", "message": "该数据不存在或已被删除"}
+#     orm_object.delete_from_db()
+#     return {"status": "success", "message": "删除成功"}
+
+
 def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
-    """
-    register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
-     :param app: flask 对象
-     :param view: 视图类对象
-     :param endpoint: 端点
-     :param url:
-     :param pk:
-     :param pk_type:
-     :return:
-    """
     """类方法转换为视图函数"""
     view_func = view.as_view(endpoint)
     """添加url规则"""
@@ -47,16 +45,12 @@ def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
         url,
         defaults={pk: None},
         view_func=view_func,
-        methods=[
-            "GET",
-        ],
+        methods=["GET"],
     )
     app.add_url_rule(
         url,
         view_func=view_func,
-        methods=[
-            "POST",
-        ],
+        methods=["POST"],
     )
     app.add_url_rule(
         f"{url}<{pk_type}:{pk}>", view_func=view_func, methods=["GET", "PUT", "DELETE"]
@@ -190,12 +184,11 @@ class CategoryAPI(MethodView):
         return {"status": "success", "message": "分类添加成功"}
 
     def delete(self, category_id):
-        category = CategoryORM.query.filter(CategoryORM.id == category_id).first()
-        print(category.id)
+        category = CategoryORM.query.get(category_id)
         if not category:
-            return {"status": "fail", "message": "该分类不存在或已被删除"}
+            return {"status": "fail", "message": "该用户不存在或已被删除"}
         category.delete_from_db()
-        return {"status": "success", "message": "分类删除成功"}
+        return {"status": "success", "message": "用户删除成功"}
 
     def put(self, user_id):
         # update a single user
@@ -205,6 +198,13 @@ class CategoryAPI(MethodView):
 class ArticleAPI(MethodView):
     def get(self, article_id):
         return get_api(article_id, ArticleORM)
+
+    def delete(self, article_id):
+        article = ArticleORM.query.get(article_id)
+        if not article:
+            return {"status": "fail", "message": "该文章不存在或已被删除"}
+        article.delete_from_db()
+        return {"status": "success", "message": "文章删除成功"}
 
 
 def register_api(app: Flask):
