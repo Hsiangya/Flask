@@ -1,6 +1,6 @@
 import random
 
-from flask import Blueprint, Flask, request
+from flask import Blueprint, Flask, request, session
 from flask.views import MethodView
 
 from application.models import ArticleORM, CategoryORM, UserORM
@@ -207,6 +207,22 @@ class ArticleAPI(MethodView):
         return {"status": "success", "message": "文章删除成功"}
 
 
+class LoginAPI(MethodView):
+    def post(self):
+        username = request.json.get("username")
+        password = request.json.get("password")
+        user: UserORM = UserORM.find_by_username(username)
+        if not user:
+            return {"status": "fail", "message": "该用户不存在"}
+        password: UserORM = UserORM.check_password(password)
+        if not password:
+            return {"status": "fail", "message": "密码错误，请重新输入密码"}
+        if not user.is_admin:
+            return {"status": "fail", "message": "非管理员无法登录后台管理系统"}
+        session["is_admin"] = True
+        return {"status": "success", "message": "登录成功，将在两秒后跳转"}
+
+
 def register_api(app: Flask):
     """API注册到蓝图上"""
     register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
@@ -216,5 +232,12 @@ def register_api(app: Flask):
     register_api_func(
         admin_api_bp, ArticleAPI, "article_api", "/article/", pk="article_id"
     )
+    """添加url规则"""
+    admin_api_bp.add_url_rule(
+        "/login",
+        view_func=LoginAPI.as_view("admin_login"),
+        methods=["POST"],
+    )
+
     """注册蓝图"""
     app.register_blueprint(admin_api_bp)
