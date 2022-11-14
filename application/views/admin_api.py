@@ -3,7 +3,7 @@ import random
 from flask import Blueprint, Flask, request
 from flask.views import MethodView
 
-from application.models import CategoryORM, UserORM
+from application.models import ArticleORM, CategoryORM, UserORM
 
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
 
@@ -202,11 +202,19 @@ class CategoryAPI(MethodView):
         pass
 
 
+class ArticleAPI(MethodView):
+    def get(self, article_id):
+        return get_api(article_id, ArticleORM)
+
+
 def register_api(app: Flask):
     """API注册到蓝图上"""
     register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
     register_api_func(
         admin_api_bp, CategoryAPI, "category_api", "/category/", pk="category_id"
+    )
+    register_api_func(
+        admin_api_bp, ArticleAPI, "article_api", "/article/", pk="article_id"
     )
     """注册蓝图"""
     app.register_blueprint(admin_api_bp)

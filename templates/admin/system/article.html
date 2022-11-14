@@ -1,53 +1,104 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>角色管理</title>
-		<link href="../../../static/pear/component/pear/css/pear.css" rel="stylesheet" />
-	</head>
-	<body class="pear-container">
-		<div class="layui-card">
-			<div class="layui-card-body">
-				<form class="layui-form" action="">
-					<div class="layui-form-item">
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">用户名</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">性别</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<label class="layui-form-label">邮箱</label>
-							<div class="layui-input-inline">
-								<input type="text" name="realName" placeholder="" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-form-item layui-inline">
-							<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="role-query">
-								<i class="layui-icon layui-icon-search"></i>
-								查询
-							</button>
-							<button type="reset" class="pear-btn pear-btn-md">
-								<i class="layui-icon layui-icon-refresh"></i>
-								重置
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<div class="layui-card">
-			<div class="layui-card-body">
-				<table id="role-table" lay-filter="role-table"></table>
-			</div>
-		</div>
-		<script src="../../../static/pear/component/layui/layui.js"></script>
-		<script src="../../../static/pear/component/pear/pear.js"></script>
-	</body>
+<head>
+    <meta charset="utf-8">
+    <title>角色管理</title>
+    <link href="../../../static/pear/component/pear/css/pear.css" rel="stylesheet"/>
+</head>
+<body class="pear-container">
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realName" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realName" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realName" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-inline">
+                    <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="role-query">
+                        <i class="layui-icon layui-icon-search"></i>
+                        查询
+                    </button>
+                    <button type="reset" class="pear-btn pear-btn-md">
+                        <i class="layui-icon layui-icon-refresh"></i>
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="article-table" lay-filter="article-table"></table>
+    </div>
+</div>
+工具栏模板：
+<script type="text/html" id="article-toolbar">
+    <div class="layui-btn-container">
+        <button class="pear-btn pear-btn-primary pear-btn-xs" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-xs" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+    </div>
+</script>
+<script type="text/html" id="article-toolEvent">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="../../../static/pear/component/layui/layui.js"></script>
+<script src="../../../static/pear/component/pear/pear.js"></script>
+<script>
+  layui.use('table', function() {
+    var table = layui.table;
+
+    //第一个实例
+    table.render({
+      elem: '#article-table'
+      , url: '/api/v1/admin/article/' //数据接口
+      , page: true //开启分页
+      , skin: 'line'
+      , toolbar: '#article-toolbar'
+      , scrollPos: 'fixed'
+      , cols: [
+        [ //表头
+          {type: 'checkbox'}
+          , {field: 'id', title: 'ID', sort: true, hide: true}
+          , {field: 'title', title: '标题'}
+          , {field: 'source', title: '来源', sort: true}
+          , {field: 'digest', title: '摘要', hide: true}
+          , {field: 'content', title: '文章内容'}
+          , {field: 'clicks', title: '点击数', sort: true}
+          , {field: 'index_image_rul', title: '头像地址', hide: true}
+          , {field: 'status', title: '状态', sort: true}
+          , {field: 'reason', title: '原因', hide: true}
+          , {field: 'category_id', title: '分类', sort: true, hide: true}
+          , {field: 'user_id', title: '作者', sort: true}
+          , {field: 'create_at', title: '创建时间', sort: true, hide: true}
+          , {field: 'update_at', title: '修改时间', sort: true, hide: true}
+          , {title: '操作', width: 200, templet: '#article-toolEvent'},
+        ]],
+    });
+  });
+</script>
+
+</body>
 </html>
