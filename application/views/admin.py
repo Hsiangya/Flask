@@ -43,14 +43,14 @@ def edit_user():
 #     return render_template("admin/system/edit_user.html")
 
 
-@admin_bp.route("/admin/system_role")
+@admin_bp.route("/admin/system_article")
 def system_role():
-    return render_template("admin/system/role.html")
+    return render_template("admin/system/article.html")
 
 
-@admin_bp.route("/admin/system_power")
+@admin_bp.route("/admin/system_category")
 def system_power():
-    return render_template("admin/system/power.html")
+    return render_template("admin/system/category.html")
 
 
 @admin_bp.route("/admin/system_department")

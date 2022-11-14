@@ -3,9 +3,30 @@ import random
 from flask import Blueprint, Flask, request
 from flask.views import MethodView
 
-from application.models import UserORM
+from application.models import CategoryORM, UserORM
 
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
+
+
+def get_API(pk, orm):
+    """主键与orm"""
+    if pk is None:
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("limit", default=10, type=int)
+        filters = []
+        paginate = orm.query.filter(*filters).paginate(
+            page=page, per_page=per_page, error_out=False
+        )
+        return {
+            "code": 0,
+            "msg": "请求成功",
+            "count": paginate.total,
+            "data": [data.json() for data in paginate.items],
+        }
+    else:
+        """请求用户id"""
+        data = orm.query.get(pk)
+        return {"code": 0, "msg": "请求成功", "data": data.json()}
 
 
 def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
@@ -43,26 +64,8 @@ def register_api_func(app, view, endpoint, url, pk="id", pk_type="int"):
 
 
 class UserAPI(MethodView):
-    @staticmethod
-    def get(user_id):
-        if user_id is None:
-            page = request.args.get("page", default=1, type=int)
-            per_page = request.args.get("limit", default=10, type=int)
-            filters = []
-            paginate = UserORM.query.filter(*filters).paginate(
-                page=page, per_page=per_page, error_out=False
-            )
-
-            return {
-                "code": 0,
-                "msg": "请求成功",
-                "count": paginate.total,
-                "data": [user.json() for user in paginate.items],
-            }
-        else:
-            """请求用户id"""
-            user = UserORM.query.get(user_id)
-            return {"code": 0, "msg": "请求成功", "data": user.json()}
+    def get(self, user_id):
+        return get_API(user_id, UserORM)
 
     def post(self):
         # 创建一个新用户
@@ -135,6 +138,7 @@ class UserAPI(MethodView):
 
     @staticmethod
     def query_rep(username, nick_name, mobile):
+        """校验数据"""
         """1.判断账号是否已经存在"""
         if UserORM.query.filter(UserORM.username == username).first():
             return {"status": "fail", "message": "该账号已存在"}
@@ -147,6 +151,7 @@ class UserAPI(MethodView):
 
     @staticmethod
     def request_info():
+        """获取请求数据"""
         username = request.json.get("username")
         nick_name = request.json.get("nick_name", username)
         password = request.json.get("password")
@@ -169,9 +174,28 @@ class UserAPI(MethodView):
         )
 
 
+class CategoryAPI(MethodView):
+    def get(self, category_id):
+        return get_API(category_id, CategoryORM)
+
+    def post(self):
+        # 创建一个新用户
+        pass
+
+    def delete(self, user_id):
+        # 删除一个用户
+        pass
+
+    def put(self, user_id):
+        # update a single user
+        pass
+
+
 def register_api(app: Flask):
     """API注册到蓝图上"""
     register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
-
+    register_api_func(
+        admin_api_bp, CategoryAPI, "category_api", "/category/", pk="category_id"
+    )
     """注册蓝图"""
     app.register_blueprint(admin_api_bp)

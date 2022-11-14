@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>角色管理</title>
-		<link href="../static/pear/component/pear/css/pear.css" rel="stylesheet" />
+		<link href="../../../static/pear/component/pear/css/pear.css" rel="stylesheet" />
 	</head>
 	<body class="pear-container">
 		<div class="layui-card">
@@ -47,7 +47,7 @@
 				<table id="role-table" lay-filter="role-table"></table>
 			</div>
 		</div>
-		
+
 		<script type="text/html" id="role-toolbar">
 			<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
 				<i class="layui-icon layui-icon-add-1"></i>
@@ -58,27 +58,27 @@
 				删除
 			</button>
 		</script>
-		
+
 		<script type="text/html" id="role-bar">
 			<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
 			<button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="power"><i class="layui-icon layui-icon-vercode"></i></button>
 			<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
 		</script>
-		
+
 		<script type="text/html" id="role-enable">
 			<input type="checkbox" name="enable" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="role-enable"  {{ d.enable== true ? 'checked' : '' }} />
 		</script>
 
-		<script src="../static/pear/component/layui/layui.js"></script>
-		<script src="../static/pear/component/pear/pear.js"></script>
+		<script src="../../../static/pear/component/layui/layui.js"></script>
+		<script src="../../../static/pear/component/pear/pear.js"></script>
 		<script>
 		    layui.use(['table','form','jquery'],function () {
 		        let table = layui.table;
 		        let form = layui.form;
 		        let $ = layui.jquery;
-		
+
 		        let MODULE_PATH = "operate/";
-		
+
 		        let cols = [
 		            [
 		                {type:'checkbox'},
@@ -89,7 +89,7 @@
 		                {title: '操作', toolbar: '#role-bar', align:'center', width:195}
 		            ]
 		        ]
-		
+
 		        table.render({
 		            elem: '#role-table',
 		            url: '../../admin/data/role.json',
@@ -103,7 +103,7 @@
 		                icon: 'layui-icon-refresh',
 		            }, 'filter', 'print', 'exports']
 		        });
-		
+
 		        table.on('tool(role-table)', function(obj){
 		            if(obj.event === 'remove'){
 		                window.remove(obj);
@@ -113,7 +113,7 @@
 		                window.power(obj);
 		            }
 		        });
-		
+
 		        table.on('toolbar(role-table)', function(obj){
 		            if(obj.event === 'add'){
 		                window.add();
@@ -123,16 +123,16 @@
 		                window.batchRemove(obj);
 		            }
 		        });
-		
+
 		        form.on('submit(role-query)', function(data){
 		            table.reload('role-table',{where:data.field})
 		            return false;
 		        });
-		
+
 		        form.on('switch(role-enable)', function(obj){
 		            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
 		        });
-		
+
 		        window.add = function(){
 		            layer.open({
 		                type: 2,
@@ -142,7 +142,7 @@
 		                content: MODULE_PATH + 'add.html'
 		            });
 		        }
-		
+
 		        window.power = function(obj){
 		            layer.open({
 		                type: 2,
@@ -152,7 +152,7 @@
 		                content: MODULE_PATH + 'edit.html'
 		            });
 		        }
-		
+
 		        window.edit = function(obj){
 		            layer.open({
 		                type: 2,
@@ -162,7 +162,7 @@
 		                content: MODULE_PATH + 'edit.html'
 		            });
 		        }
-		
+
 		        window.remove = function(obj){
 		            layer.confirm('确定要删除该角色', {icon: 3, title:'提示'}, function(index){
 		                layer.close(index);
@@ -184,7 +184,7 @@
 		                })
 		            });
 		        }
-		
+
 		        window.batchRemove = function(obj){
 		            let data = table.checkStatus(obj.config.id).data;
 		            if(data.length === 0){
@@ -216,7 +216,7 @@
 		                })
 		            });
 		        }
-		
+
 		        window.refresh = function(){
 		            table.reload('role-table');
 		        }

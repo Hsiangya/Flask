@@ -17,14 +17,14 @@
     ]
   },
   {
-    "id": "system",
+    "id": 2,
     "title": "系统管理",
     "icon": "layui-icon layui-icon-set-fill",
     "type": 0,
     "href": "",
     "children": [
       {
-        "id": 601,
+        "id": 201,
         "title": "用户管理",
         "icon": "layui-icon layui-icon-face-smile",
         "type": 1,
@@ -32,23 +32,23 @@
         "href": "/admin/system_user"
       },
       {
-        "id": 602,
-        "title": "角色管理",
+        "id": 202,
+        "title": "文章管理",
         "icon": "layui-icon layui-icon-face-cry",
         "type": 1,
         "openType": "_iframe",
-        "href": "/admin/system_role"
+        "href": "/admin/system_article"
       },
       {
-        "id": 603,
-        "title": "权限管理",
+        "id": 203,
+        "title": "分类管理",
         "icon": "layui-icon layui-icon-face-cry",
         "type": 1,
         "openType": "_iframe",
-        "href": "/admin/system_power"
+        "href": "/admin/system_category"
       },
       {
-        "id": 604,
+        "id": 204,
         "title": "部门管理",
         "icon": "layui-icon layui-icon-face-cry",
         "type": 1,
@@ -58,14 +58,14 @@
     ]
   },
   {
-    "id": "echarts",
+    "id": 3,
     "title": "数据图表",
     "icon": "layui-icon layui-icon-chart",
     "type": 0,
     "href": "",
     "children": [
       {
-        "id": 12121,
+        "id": 301,
         "title": "折线图",
         "icon": "layui-icon layui-icon-face-smile",
         "type": 1,
@@ -73,7 +73,7 @@
         "href": "/admin/echarts_line"
       },
       {
-        "id": 121212,
+        "id": 302,
         "title": "柱状图",
         "icon": "layui-icon layui-icon-face-smile",
         "type": 1,
