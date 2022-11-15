@@ -249,6 +249,12 @@ class LogoutAPI(MethodView):
         return redirect("/")
 
 
+class EchartsAPI(MethodView):
+    @admin_required
+    def get(self):
+        pass
+
+
 def register_api(app: Flask):
     """API注册到蓝图上"""
     register_api_func(admin_api_bp, UserAPI, "user_api", "/user/", pk="user_id")
