@@ -1,8 +1,11 @@
 import random
 
-from flask import Blueprint, Flask, request, session
+from flask import Blueprint, Flask, redirect, request
 from flask.views import MethodView
+from flask_login import login_user, logout_user
 
+from application import redis
+from application.common.utils import admin_required
 from application.models import ArticleORM, CategoryORM, UserORM
 
 admin_api_bp = Blueprint("admin_api", __name__, url_prefix="/api/v1/admin")
@@ -211,16 +214,39 @@ class LoginAPI(MethodView):
     def post(self):
         username = request.json.get("username")
         password = request.json.get("password")
+        captcha_code_uuid = request.json.get("captcha_code_uuid")
+        captcha_code = request.json.get("captcha_code")
+
+        if not username:
+            return {"status": "fail", "message": "用户名不能为空"}
+        if not password:
+            return {"status": "fail", "message": "密码不能为空"}
+        if not captcha_code:
+            return {"status": "fail", "message": "验证码不能为空"}
+
+        real_captcha_code = redis.strict_redis.get(
+            "captcha_code_uuid_" + captcha_code_uuid
+        )
+        if captcha_code != real_captcha_code:
+            return {"status": "fail", "message": "验证码错误，请重新输入"}
+
         user: UserORM = UserORM.find_by_username(username)
+        check_password: UserORM = UserORM.check_password(user, password=password)
         if not user:
             return {"status": "fail", "message": "该用户不存在"}
-        password: UserORM = UserORM.check_password(password)
-        if not password:
+        if not check_password:
             return {"status": "fail", "message": "密码错误，请重新输入密码"}
         if not user.is_admin:
-            return {"status": "fail", "message": "非管理员无法登录后台管理系统"}
-        session["is_admin"] = True
+            return {"status": "fail", "message": "该用户无管理员权限"}
+        login_user(user)
         return {"status": "success", "message": "登录成功，将在两秒后跳转"}
+
+
+class LogoutAPI(MethodView):
+    @admin_required
+    def post(self):
+        logout_user()
+        return redirect("/")
 
 
 def register_api(app: Flask):
@@ -233,11 +259,8 @@ def register_api(app: Flask):
         admin_api_bp, ArticleAPI, "article_api", "/article/", pk="article_id"
     )
     """添加url规则"""
-    admin_api_bp.add_url_rule(
-        "/login",
-        view_func=LoginAPI.as_view("admin_login"),
-        methods=["POST"],
-    )
+    admin_api_bp.add_url_rule("/login", view_func=LoginAPI.as_view("login_api"))
+    admin_api_bp.add_url_rule("/logout", view_func=LogoutAPI.as_view("logout_api"))
 
     """注册蓝图"""
     app.register_blueprint(admin_api_bp)

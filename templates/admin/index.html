@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>主页</title>
     <!-- 依 赖 样 式 -->
-    <link rel="stylesheet" href="../static/pear/component/pear/css/pear.css"/>
+    <link rel="stylesheet" href="/static/pear/component/pear/css/pear.css"/>
     <!-- 加 载 样 式 -->
-    <link rel="stylesheet" href="../static/pear/admin/css/loader.css"/>
+    <link rel="stylesheet" href="/static/pear/admin/css/loader.css"/>
     <!-- 布 局 样 式 -->
-    <link rel="stylesheet" href="../static/pear/admin/css/admin.css"/>
+    <link rel="stylesheet" href="/static/pear/admin/css/admin.css"/>
 </head>
 <!-- 结 构 代 码 -->
 <body class="layui-layout-body pear-admin">
@@ -47,7 +47,7 @@
                 <dl class="layui-nav-child">
                     <dd><a user-menu-url="view/system/person.html" user-menu-id="5555" user-menu-title="基本资料">基本资料</a>
                     </dd>
-                    <dd><a href="javascript:void(0);" class="logout">注销登录</a></dd>
+                    <dd><a href="/api/v1/admin/logout" class="logout">注销登录</a></dd>
                 </dl>
             </li>
             <!-- 主 题 配 置 -->
@@ -96,8 +96,8 @@
     <a href="#" class="layui-icon layui-icon-shrink-right"></a>
 </div>
 <!-- 依 赖 脚 本 -->
-<script src="../static/layui/layui.js"></script>
-<script src="../static/pear/component/pear/pear.js"></script>
+<script src="/static/layui/layui.js"></script>
+<script src="/static/pear/component/pear/pear.js"></script>
 <!-- 框 架 初 始 化 -->
 <script>
   layui.use(['admin', 'jquery', 'popup', 'drawer'], function() {

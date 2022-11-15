@@ -2,9 +2,11 @@ import hashlib
 import logging
 import os
 from datetime import datetime
+from functools import wraps
 from logging.handlers import RotatingFileHandler
 
-from flask import current_app
+from flask import current_app, redirect
+from flask_login import current_user
 from werkzeug.datastructures import FileStorage
 
 from configs import config
@@ -52,3 +54,13 @@ def upload_file(avatar: FileStorage):
         ["/static", "avatar", datetime.today().strftime("%Y-%m"), file_name]
     )
     return avatar_url
+
+
+def admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not (hasattr(current_user, "is_admin")) and current_user.is_admin == True:
+            return redirect("/admin/login")
+        return func(*args, **kwargs)
+
+    return wrapper

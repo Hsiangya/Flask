@@ -113,7 +113,7 @@ def register_view2():
     user.password = password
     user.mobile = phone
     user.save_to_db()
-    return {"status": "success", "message": "注册成功，现在可以去登录了"}
+    return {"status": "success", "message": "注册成功，2s 之后跳转到登录页面"}
 
 
 @index_bp.route("/user")
