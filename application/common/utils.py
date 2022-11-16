@@ -59,8 +59,9 @@ def upload_file(avatar: FileStorage):
 def admin_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if not (hasattr(current_user, "is_admin")) and current_user.is_admin == True:
+        if not (hasattr(current_user, "is_admin") and current_user.is_admin == True):
             return redirect("/admin/login")
-        return func(*args, **kwargs)
+        ret = func(*args, **kwargs)
+        return ret
 
     return wrapper

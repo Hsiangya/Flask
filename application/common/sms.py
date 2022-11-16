@@ -18,8 +18,10 @@ from secret_data import sms_data
 
 def send_sms(phones: list, code: str, duration: str = "5"):
     try:
-        secret_id = sms_data["secret_id"]
-        secret_key = sms_data["secret_key"]
+        # secret_id = sms_data["secret_id"]
+        # secret_key = sms_data["secret_key"]
+        secret_id = os.getenv("secret_id")
+        secret_key = os.getenv("secret_key")
         # print(secret_id, secret_key)
         cred = credential.Credential(secret_id, secret_key)
 
@@ -37,15 +39,18 @@ def send_sms(phones: list, code: str, duration: str = "5"):
 
         req = models.SendSmsRequest()
 
-        sms_sdk_app_id = sms_data["sms_sdk_app_id"]
+        # sms_sdk_app_id = sms_data["sms_sdk_app_id"]
+        sms_sdk_app_id = os.getenv("sms_sdk_app_id")
         req.SmsSdkAppId = sms_sdk_app_id
 
-        sign_name = sms_data["sign_name"]
+        # sign_name = sms_data["sign_name"]
+        sign_name = os.getenv("sign_name")
         req.SignName = sign_name
         req.ExtendCode = ""
         req.SenderId = ""
         req.PhoneNumberSet = [f"+86{phone}" for phone in phones]
-        req.TemplateId = sms_data["TemplateId"]
+        # req.TemplateId = sms_data["TemplateId"]
+        req.TemplateId = os.getenv("TemplateId")
 
         # req.TemplateParamSet = [code, duration]  # 依据模板内的变量决定
         req.TemplateParamSet = [code]
