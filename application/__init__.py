@@ -22,6 +22,7 @@ from configs import config
 
 def create_app(config_name=None):
     app = Flask("Flask")
+
     if not config_name:
         config_name = os.getenv("FLASK_CONFIG", "development")
     app.config.from_object(config[config_name])
