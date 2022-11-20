@@ -20,8 +20,8 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "SQLALCHEMY_DATABASE_URI", "SQLALCHEMY_DATABASE_URI_DEV"
     )
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_HOST = os.getenv("REDIS_HOST_DEV")
+    REDIS_PORT = os.getenv("REDIS_PORT_DEV")
 
 
 class DevelopmentConfig(BaseConfig):
@@ -44,8 +44,8 @@ class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI_PRD")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LOG_LEVEL = logging.ERROR
-    REDIS_HOST = os.getenv("REDIS_HOST")
-    REDIS_PORT = os.getenv("REDIS_PORT")
+    REDIS_HOST = os.getenv("REDIS_HOST_PRD")
+    REDIS_PORT = os.getenv("REDIS_PORT_PRD")
 
 
 config = {
