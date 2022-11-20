@@ -59,11 +59,12 @@
 <script src="/static/js/main.js"></script>
 <script>
   layui.use(function() {
-    let layer=layui.layer
+    let layer = layui.layer;
     let form = layui.form;
     let $ = layui.jquery;
     let captchaPath = '/get_captcha'; /*图片验证的访问地址*/
     let captcha_code_uuid = '';  /*定义图片验证码的 uuid */
+
     // 校验用户账号不能含有中文校验(等待添加)
 
     // 点击图片更新验证码
@@ -87,12 +88,45 @@
     // 每次进入页面之后,自动刷新验证码
     update_captcha_image();
 
+    // 发送短信前校验
+    function send_sms_check(username, password, phone, captcha_code) {
+      let verify_username = /\w{3,15}$/.test(username);
+      let verify_phone = /^1[3456789]\d{9}$/.test(phone);
+      let verify_password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,12}$/.test(password);
+      if (!verify_username) {
+        layer.msg('账号应由字母、数字、下划线组成', {
+          icon: 2,
+          time: 1000,
+        });
+        return false;
+      }
+      if (!verify_phone) {
+        layer.msg('请输入正确的手机号', {
+          icon: 2,
+          time: 1000,
+        });
+        return false;
+      }
+      if (captcha_code === '') {
+        layer.msg('验证码不能为空');
+        return false;
+      }
+      if (!verify_password) {
+        layer.msg('密码长度应为8-12位，且符合要求', {
+          icon: 2,
+          time: 1000,
+        });
+        return false;
+      }
+      return true;
+    }
 
     // 发送手机验证码
     $('.send_sms').click(function() {
-      let captcha_code = $('[name="captcha_code"]').val();
       let phone = $('[name="phone"]').val();
-
+      let username = $('[name="username"]').val();
+      let password = $('[name="password"]').val();
+      let captcha_code = $('[name="captcha_code"]').val();
       // 向后端校验验证码 验证码uuid 以及手机号
       let data = {
         captcha_code: captcha_code,
@@ -105,16 +139,10 @@
         body: JSON.stringify(data),
       };
       let num = 60;
-
+      if (!send_sms_check(username, password, phone, captcha_code)) {
+        return false;
+      }
       // 前端校验
-      if (captcha_code === '') {
-        layer.msg('验证码不能为空');
-        return false;
-      }
-      if (phone === '') {
-        layer.msg('手机号不能为空');
-        return false;
-      }
       if (this.text === '获取短信验证码') {
         fetch('/sms_code', option).then((response) => response.json()).then(function(res) {
           if (res.status === 'fail') {
@@ -133,11 +161,11 @@
             }, 1000);
           }
         });
-      }else{
-        layer.msg("请"+this.text+'再获取短信验证码',{
-              icon: 2,
-              time: 1000,
-            })
+      } else {
+        layer.msg('请' + this.text + '再获取短信验证码', {
+          icon: 2,
+          time: 1000,
+        });
       }
     });
 
@@ -157,6 +185,9 @@
 
     // 监听注册按钮事件
     form.on('submit(register)', async function(data) {
+      if (!send_sms_check(data.username, data.password, data.phone, data.captcha_code)) {
+        return false;
+      }
       const result = await register(data.field);
       if (result.status === 'success') {
         layui.layer.msg(result.message, {

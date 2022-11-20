@@ -135,7 +135,7 @@ def sms_code():
     if not real_captcha_code:
         return {"status": "fail", "message": "验证码已过期"}
     if real_captcha_code != captcha_code:
-        return {"status": "fail", "message": "验证码错误，请输入正确的验证码"}
+        return {"status": "fail", "message": "验证码错误，请更新验证码后重新输入"}
 
     """发送短信验证码"""
     send_sms_code = random.randint(0, 999999)
