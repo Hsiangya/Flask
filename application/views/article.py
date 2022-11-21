@@ -82,7 +82,7 @@ def article_collect():
         return {"status": "fail", "message": "文章不存在"}
 
     """执行收藏逻辑"""
-
+    message = "操作异常"
     if action == "collect":
         current_user.collection_articles.append(article)
         message = "收藏文章成功"

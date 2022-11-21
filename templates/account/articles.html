@@ -22,7 +22,7 @@
             {% endfor %}
         </ul>
         <div class="profile-pagination" style="text-align: center;">
-            <div id="article"></div>
+            <div id="user_article"></div>
         </div>
     </div>
 {% endblock %}
@@ -51,7 +51,7 @@
 
         //执行一个laypage实例
         laypage.render({
-          elem: 'article',//注意，这里的 test1 是 ID，不用加 # 号
+          elem: 'user_article',//注意，这里的 test1 是 ID，不用加 # 号
           count: {{paginate.total}}, //数据总数，从服务端得到
           curr: {{paginate.page}},
           first: '首页',

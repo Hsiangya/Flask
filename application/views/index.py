@@ -8,7 +8,7 @@ from flask import (
     render_template,
     request,
 )
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from application.common import constants
 from application.common.get_captcha import get_captcha_image
@@ -116,9 +116,18 @@ def register_view2():
     return {"status": "success", "message": "注册成功，2s 之后跳转到登录页面"}
 
 
-@index_bp.route("/user")
-def user_view():
-    return render_template("bbs/user.html")
+@index_bp.route("/user/<int:user_id>")
+@login_required
+def user_view(user_id):
+    user = UserORM.query.get(user_id)
+    per_page = request.args.get("per_page", type=int, default=10)
+    page = request.args.get("page", type=int, default=1)
+    paginate = (
+        ArticleORM.query.order_by(ArticleORM.create_at.desc())
+        .filter(ArticleORM.user_id == user_id)
+        .paginate(per_page=per_page, page=page, error_out=False)
+    )
+    return render_template("bbs/user.html", user=user, paginate=paginate)
 
 
 @index_bp.route("/sms_code", methods=["POST"])
@@ -201,7 +210,7 @@ def login_view2():
     # if not real_captcha_code:
     #     return {"status": "fail", "message": "验证码已过期，请刷新验证码"}
     if captcha_code != real_captcha_code:
-        return {"status": "fail", "message": "验证码错误，请重新输入"}
+        return {"status": "fail", "message": "验证码错误，请更新验证码后重新输入"}
 
     """查询该用户是否注册"""
     # 确保查询没有出错
@@ -222,6 +231,7 @@ def login_view2():
 
 
 @index_bp.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect("/")
