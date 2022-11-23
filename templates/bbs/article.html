@@ -60,7 +60,7 @@
                         {% endif %}
                         <!--评论数据展示栏-->
                         <div class="comment_count">
-                            4条评论
+                            {{ article.comments.count()}}条评论
                         </div>
 
                         <div class="comments">
@@ -326,7 +326,6 @@
         'comment': comment,
         'parent_id': parent_id,
       };
-      console.log(params);
       const result = await article_comment(params);
       if (result.success === 'success') {
         window.location.reload();
@@ -389,7 +388,7 @@
     });
 
     // 点赞评论
-    $('comment_up').click(function() {
+    $('.comment_up').click(function() {
       let action = 'add';
       // 默认状态是关注，如果已经是关注，则动作是取消点赞
       if ($('comment_up').hasClass('has_comment_up')) {

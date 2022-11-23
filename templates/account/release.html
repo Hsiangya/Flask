@@ -37,6 +37,7 @@
                     <button type="button" class="layui-btn" id="upload_picture">
                         <i class="layui-icon">&#xe67c;</i>上传图片
                     </button>
+                    <img src="" alt="" id="show_avatar" style="height: 80px">
                     <input hidden type="text" name="image_url" class="input_file">
                 </div>
             </div>
@@ -47,7 +48,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+                    <button class="layui-btn" lay-submit lay-filter="article_submit">提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -56,7 +57,7 @@
 {% endblock %}
 
 {% block footer_script %}
-    <script src="tinymce/tinymce.min.js"></script>
+    <script src="/static/tinymce/tinymce.min.js"></script>
     <script>
       layui.use(['form', 'upload'], function() {
         var form = layui.form;
@@ -123,15 +124,42 @@
           url: '/upload/article_avatar', //上传接口
           done: function(res) {
             $('[name="image_url"]').val(res.article_avatar_url);
-            layer.msg(res.message);
+            $('#show_avatar').attr('src', res.article_avatar_url);
+            layer.msg(res.message, {
+              icon: 1,
+              time: 1500,
+            });
             //上传完毕回调
           },
           error: function() {
             //请求异常回调
-            layer.msg('图片上传失败');
+            layer.msg('图片上传失败', {
+              icon: 2,
+              time: 1500,
+            });
           },
         });
-
+        form.on('submit(article_submit)', function(data) {
+          fetch('/account/release', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data.field),
+          }).then(response => response.json()).then(res => {
+            if (res.status === 'success') {
+              layer.msg(res.message, {
+                icon: 1,
+                time: 1500,
+              });
+              setTimeout(() => window.location.href = res.next, 1500);
+            } else {
+              layer.msg(res.message, {
+                icon: 2,
+                time: 1500,
+              });
+            }
+          });
+          return false;
+        });
       });
     </script>
 {% endblock %}

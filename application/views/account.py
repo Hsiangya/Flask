@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from werkzeug.datastructures import FileStorage
 
 from application.common.utils import upload_file
-from application.models import CategoryORM, UserORM
+from application.models import ArticleORM, CategoryORM, UserORM
 
 account_bp = Blueprint("account", __name__)
 
@@ -116,6 +116,27 @@ def account_articles():
 def account_release():
     cate_list = CategoryORM.query.all()
     return render_template("account/release.html", cate_list=cate_list)
+
+
+@account_bp.post("/account/release")
+@login_required
+def account_release_text():
+    Article = ArticleORM()
+    title = request.json.get("title")
+    category_id = request.json.get("cate_id")
+    digest = request.json.get("describe")
+    index_image_url = request.json.get("image_url")
+    content = request.json.get("content")
+    Article.title = title
+    Article.cate_id = category_id
+    Article.digest = digest
+    Article.index_image_url = index_image_url
+    Article.content = content
+    Article.status = 1
+    Article.source = current_user.nick_name
+    Article.user_id = current_user.id
+    Article.save_to_db()
+    return {"status": "success", "message": "文章发布成功,请等待审核", "next": "/account/articles"}
 
 
 @account_bp.post("/upload/article_avatar")

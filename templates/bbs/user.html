@@ -21,26 +21,23 @@
                 <div class="profile-picture">
                     <img src='{{ user.avatar_url }}' alt="用户图片">
                 </div>
-                <div class="profile-name">{{user.nick_name}}</div>
+                <div class="profile-name">{{ user.nick_name }}</div>
 
                 <ul class="profile-detail">
-                    <li>性 别：{{user.gender}}</li>
-                    <li>签 名：{{user.signature}}</li>
+                    <li>性 别：{{ user.gender }}</li>
+                    <li>签 名：{{ user.signature }}</li>
                 </ul>
 
                 <div class="focus-profile">
-                    <a href="javascript:;" class="focused"
-                       data-userid="1"
+                    <a href="javascript:;" class="focused" data-userid="{{ user.id }}"
                        style="display: none"
                     >
-                        <span class="out">已关注</span>
-                        <span class="over">取消关注</span>
+                        <span class="out">已关</span>
+                        <span class="over">取关</span>
                     </a>
 
-                    <a href="javascript:;" class="focus"
-                       data-userid="1"
-                       style="display: inline-block"
-                    >关注</a>
+                    <a href="javascript:;" class="focus" data-userid="{{ user.id }}"
+                       style="display: {% if user.id not in current_user.followed %}inline-block{% else %} none {% endif %}">关注</a>
                 </div>
 
             </div>
@@ -52,9 +49,9 @@
                     <tbody>
                     {% for item in paginate.items %}
                         <tr>
-                            <td><a href="/article/{{ item.id }}">{{item.title}}</a></td>
+                            <td><a href="/article/{{ item.id }}">{{ item.title }}</a></td>
                             <td>通过</td>
-                            <td><span class="text-muted">{{ item. create_at}}</span></td>
+                            <td><span class="text-muted">{{ item. create_at }}</span></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -77,45 +74,82 @@
 {% include 'bbs/includs/footer.html' %}
 
 <script>
-      layui.use(function() {
-        var laypage = layui.laypage;
+  layui.use(function() {
+    var laypage = layui.laypage;
+    var $ = layui.jquery;
 
-        // 获取链接字段
-        function getUrlParam(name) {
-          var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)'); //构造一个含有目标参数的正则表达式对象
-          var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-          if (r != null)
-            return unescape(r[2]);
-          return null; //返回参数值
+    //执行一个laypage实例
+    laypage.render({
+      elem: 'article',//注意，这里的 test1 是 ID，不用加 # 号
+      count: {{paginate.total}}, //数据总数，从服务端得到
+      curr: {{paginate.page}},
+      first: '首页',
+      last: '尾页',
+      limit: 10,
+      prev: '上一页',
+      next: '下一页',
+      jump: function(obj) {
+
+        if (obj.curr !== parseInt(getUrlParam('page'))) {
+          window.location.href = changeHref(window.location.href, 'page', obj.curr);
+        }
+      },
+    });
+
+    // 关注用户 向后台提交作者id，提交关注/取消关注动作，提交当前用户id(current_user)
+    $('.focus').click(async function() {
+      const user_id = $(this).attr('data-userid');
+      const params = {
+        'action': 'follow',
+        'user_id': user_id,
+      };
+      const result = await followed_user(params);
+      if (result.status === 'success') {
+        window.location.reload();
+      } else if (
+          result.code === '4101'
+      ) {
+        window.location.href = '/login';
+      } else {
+        //关注失败
+        alert(result.message);
+      }
+
+    });
+
+    // 取消关注
+    $('.focused').on({
+      mouseover: function() {
+        $(this).find('.out').hide();
+        $(this).find('.over').show();
+      },
+      mouseout: function() {
+        $(this).find('.out').show();
+        $(this).find('.over').hide();
+      },
+      click: async function() {
+        const user_id = $(this).attr('data-userid');
+        const params = {
+          'action': 'unfollow',
+          'user_id': user_id,
+        };
+        const result = await followed_user(params);
+        if (result.status === 'success') {
+          window.location.reload();
+        } else if (
+            result.code === '4101'
+        ) {
+          window.location.href = '/login';
+        } else {
+          //取消关注失败
+          alert(result.message);
         }
 
-        function changeHref(url, arg, val) {
-          var pattern = arg + '=([^&]*)';
-          var replaceText = arg + '=' + val;
-          return url.match(pattern) ? url.replace(eval('/(' + arg + '=)([^&]*)/gi'),
-              replaceText) : (url.match('[\?]') ? url + '&' + replaceText : url + '?' +
-              replaceText);
-        }
+      },
 
-        //执行一个laypage实例
-        laypage.render({
-          elem: 'article',//注意，这里的 test1 是 ID，不用加 # 号
-          count: {{paginate.total}}, //数据总数，从服务端得到
-          curr: {{paginate.page}},
-          first: '首页',
-          last: '尾页',
-          limit: 10,
-          prev: '上一页',
-          next: '下一页',
-          jump: function(obj) {
-
-            if (obj.curr !== parseInt(getUrlParam('page'))) {
-              window.location.href = changeHref(window.location.href, 'page', obj.curr);
-            }
-          },
-        });
-      });
-    </script>
+    });
+  });
+</script>
 
 </body>
 </html>
